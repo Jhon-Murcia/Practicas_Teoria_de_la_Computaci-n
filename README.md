@@ -11,7 +11,7 @@
 | **Número de boleta** | _(escriba su boleta)_ |
 | **Grupo** | _(escriba su grupo)_ |
 | **Profesor** | _(escriba el nombre del profesor)_ |
-| **Fechas de entrega** | Práctica 1: martes 22 de septiembre de 2026 · Práctica 2: martes 6 de octubre de 2026 |
+| **Fechas de entrega** | Práctica 1: martes 22 de septiembre de 2026 · Práctica 2: martes 6 de octubre de 2026 · Práctica 3: miércoles 4 de noviembre de 2026 (etiqueta `practica3`) |
 
 Un único software, construido de forma acumulativa a lo largo de las prácticas, para estudiar
 cadenas, lenguajes y autómatas finitos con una interfaz gráfica en **Python + Flet**.
@@ -47,6 +47,18 @@ cadenas, lenguajes y autómatas finitos con una interfaz gráfica en **Python + 
 > `src/core/lenguajes.py` y sus pruebas **proceden de la Práctica 1** (rama
 > [`practica1`](https://github.com/Jhon-Murcia/Practicas_Teoria_de_la_Computaci-n/tree/practica1)) y se reutilizan sin reescribirse.
 
+### Práctica 3 — Conversiones, λ-clausura y minimización (etiqueta `practica3`)
+
+| Documento | Contenido |
+|---|---|
+| [01-afd-a-er-jflap.md](docs/practica3/01-afd-a-er-jflap.md) | AFD → ER con JFLAP (a cargo del alumno) y apoyo del software |
+| [02-software.md](docs/practica3/02-software.md) | Extensión del software, pruebas y capturas |
+| [03-algoritmos.md](docs/practica3/03-algoritmos.md) | Cada algoritmo: teoría, pseudocódigo, ejemplo a mano vs. software, coste |
+
+Uso de las funciones nuevas: *Conversiones* (λ-clausura, eliminar λ, subconjuntos, autómata → ER,
+cadena completa), *Minimización* (AFD mínimo, tabla de pares, equivalencia) y *Simulación → Varias
+cadenas* (cargar un `.txt` y guardar el informe). Todos los algoritmos se ven paso a paso.
+
 ## Funcionalidades
 
 | Módulo | Práctica | Qué hace |
@@ -55,9 +67,11 @@ cadenas, lenguajes y autómatas finitos con una interfaz gráfica en **Python + 
 | Cadenas | 1 | Prefijos, sufijos y subcadenas; conteos y exportación a `.txt` |
 | Lenguajes | 1 | Σ*, Σ⁺ y Σⁿ con límite de 200 000 cadenas; operaciones entre lenguajes finitos |
 | Editor | 2 | Editor visual (estados, transiciones, λ, zoom, arrastre), definición formal, tabla δ editable, deshacer/rehacer, diagnóstico de determinismo |
-| Simulación | 2 | Validación paso a paso con cinta, λ-clausura, traza, árbol de caminos y pruebas rápidas |
+| Simulación | 2-3 | Validación paso a paso con cinta, λ-clausura, traza, árbol de caminos y validación de un `.txt` con informe |
 | Archivos | 2 | Importar/exportar `.jff`, `.json`, `.xml`; proyectos con varios autómatas |
-| Ayuda | 1-2 | Convenciones matemáticas y guía de uso |
+| Conversiones | 3 | λ-clausura, eliminación de λ, subconjuntos (sólo alcanzables), autómata → ER, cadena completa, paso a paso |
+| Minimización | 3 | Inaccesibles, refinamiento de particiones, tabla de pares, equivalencia con contraejemplo |
+| Ayuda | 1-3 | Convenciones matemáticas y guía de uso |
 
 Tema oscuro (predeterminado) y claro; el menú lateral se compacta en pantallas estrechas.
 
@@ -71,11 +85,12 @@ src/
   app.py                 punto de entrada
   core/                  núcleo sin Flet: lenguajes, autómata, simulación, ejemplos
   formatos/              lectura y escritura de .jff, .json y .xml
+  algoritmos/            λ-clausura, eliminación de λ, subconjuntos, minimización, equivalencia, AFD → ER
   ui/                    interfaz (tema, estado, componentes, páginas)
   assets/fonts/          tipografías incluidas (SIL OFL)
 tests/                   pruebas con pytest
 docs/practicaN/          reporte de cada práctica
-automatas/               ejemplos/ y aplicacion/ en .jff, .json y .xml
+automatas/               ejemplos/, aplicacion/ y practica3/ (casos de prueba)
 herramientas/            utilidades (exportar los ejemplos)
 evidencias/practicaN/    git/ ci/ docker/ jflap/ app/
 ```
