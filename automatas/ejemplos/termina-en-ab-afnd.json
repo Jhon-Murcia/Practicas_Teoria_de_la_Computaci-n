@@ -1,0 +1,56 @@
+{
+  "tipo": "AFND",
+  "nombre": "Termina en ab",
+  "alfabeto": [
+    "a",
+    "b"
+  ],
+  "estados": [
+    "q0",
+    "q1",
+    "q2"
+  ],
+  "inicial": "q0",
+  "aceptacion": [
+    "q2"
+  ],
+  "transiciones": [
+    {
+      "desde": "q0",
+      "lee": "a",
+      "hacia": [
+        "q0",
+        "q1"
+      ]
+    },
+    {
+      "desde": "q0",
+      "lee": "b",
+      "hacia": [
+        "q0"
+      ]
+    },
+    {
+      "desde": "q1",
+      "lee": "b",
+      "hacia": [
+        "q2"
+      ]
+    }
+  ],
+  "descripcion": "En q0 el autómata «adivina» cuándo empieza el sufijo ab.",
+  "posiciones": {
+    "q0": [
+      110.0,
+      200.0
+    ],
+    "q1": [
+      330.0,
+      200.0
+    ],
+    "q2": [
+      550.0,
+      200.0
+    ]
+  }
+}

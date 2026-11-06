@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<automata tipo="AFD" nombre="Conexión TCP (RFC 793)">
+  <descripcion>Eventos: P = abrir en modo pasivo (el servidor escucha); A = abrir en modo activo (se envía SYN); E = la aplicación envía datos desde LISTEN (se envía SYN); S = se recibe SYN; Y = se recibe SYN+ACK; K = se recibe ACK; F = se recibe FIN; X = se recibe FIN+ACK; R = se recibe RST; C = la aplicación cierra (close); T = vence el temporizador 2·MSL</descripcion>
+  <alfabeto>
+    <simbolo>P</simbolo>
+    <simbolo>A</simbolo>
+    <simbolo>E</simbolo>
+    <simbolo>S</simbolo>
+    <simbolo>Y</simbolo>
+    <simbolo>K</simbolo>
+    <simbolo>F</simbolo>
+    <simbolo>X</simbolo>
+    <simbolo>R</simbolo>
+    <simbolo>C</simbolo>
+    <simbolo>T</simbolo>
+  </alfabeto>
+  <estados>
+    <estado nombre="CLOSED" inicial="true" aceptacion="true" x="420.0" y="60.0" />
+    <estado nombre="LISTEN" x="250.0" y="180.0" />
+    <estado nombre="SYN_SENT" x="600.0" y="180.0" />
+    <estado nombre="SYN_RCVD" x="250.0" y="320.0" />
+    <estado nombre="ESTABLISHED" x="600.0" y="320.0" />
+    <estado nombre="FIN_WAIT_1" x="250.0" y="470.0" />
+    <estado nombre="FIN_WAIT_2" x="250.0" y="620.0" />
+    <estado nombre="CLOSING" x="480.0" y="470.0" />
+    <estado nombre="TIME_WAIT" x="480.0" y="620.0" />
+    <estado nombre="CLOSE_WAIT" x="800.0" y="470.0" />
+    <estado nombre="LAST_ACK" x="800.0" y="620.0" />
+  </estados>
+  <transiciones>
+    <transicion desde="CLOSED" lee="A" hacia="SYN_SENT" />
+    <transicion desde="CLOSED" lee="P" hacia="LISTEN" />
+    <transicion desde="LISTEN" lee="C" hacia="CLOSED" />
+    <transicion desde="LISTEN" lee="E" hacia="SYN_SENT" />
+    <transicion desde="LISTEN" lee="S" hacia="SYN_RCVD" />
+    <transicion desde="SYN_SENT" lee="C" hacia="CLOSED" />
+    <transicion desde="SYN_SENT" lee="S" hacia="SYN_RCVD" />
+    <transicion desde="SYN_SENT" lee="Y" hacia="ESTABLISHED" />
+    <transicion desde="SYN_RCVD" lee="C" hacia="FIN_WAIT_1" />
+    <transicion desde="SYN_RCVD" lee="K" hacia="ESTABLISHED" />
+    <transicion desde="SYN_RCVD" lee="R" hacia="LISTEN" />
+    <transicion desde="ESTABLISHED" lee="C" hacia="FIN_WAIT_1" />
+    <transicion desde="ESTABLISHED" lee="F" hacia="CLOSE_WAIT" />
+    <transicion desde="FIN_WAIT_1" lee="F" hacia="CLOSING" />
+    <transicion desde="FIN_WAIT_1" lee="K" hacia="FIN_WAIT_2" />
+    <transicion desde="FIN_WAIT_1" lee="X" hacia="TIME_WAIT" />
+    <transicion desde="FIN_WAIT_2" lee="F" hacia="TIME_WAIT" />
+    <transicion desde="CLOSING" lee="K" hacia="TIME_WAIT" />
+    <transicion desde="TIME_WAIT" lee="T" hacia="CLOSED" />
+    <transicion desde="CLOSE_WAIT" lee="C" hacia="LAST_ACK" />
+    <transicion desde="LAST_ACK" lee="K" hacia="CLOSED" />
+  </transiciones>
+</automata>

@@ -1,0 +1,49 @@
+{
+  "tipo": "AFND-lambda",
+  "nombre": "AFND-λ del Anexo 3",
+  "alfabeto": [
+    "a",
+    "b"
+  ],
+  "estados": [
+    "q0",
+    "q1"
+  ],
+  "inicial": "q0",
+  "aceptacion": [
+    "q1"
+  ],
+  "transiciones": [
+    {
+      "desde": "q0",
+      "lee": "",
+      "hacia": [
+        "q1"
+      ]
+    },
+    {
+      "desde": "q0",
+      "lee": "a",
+      "hacia": [
+        "q1"
+      ]
+    },
+    {
+      "desde": "q0",
+      "lee": "b",
+      "hacia": [
+        "q0"
+      ]
+    }
+  ],
+  "posiciones": {
+    "q0": [
+      80.0,
+      120.0
+    ],
+    "q1": [
+      240.0,
+      120.0
+    ]
+  }
+}

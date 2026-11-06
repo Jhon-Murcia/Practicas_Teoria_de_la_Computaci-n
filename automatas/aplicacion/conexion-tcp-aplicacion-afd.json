@@ -1,0 +1,230 @@
+{
+  "tipo": "AFD",
+  "nombre": "Conexión TCP (RFC 793)",
+  "alfabeto": [
+    "P",
+    "A",
+    "E",
+    "S",
+    "Y",
+    "K",
+    "F",
+    "X",
+    "R",
+    "C",
+    "T"
+  ],
+  "estados": [
+    "CLOSED",
+    "LISTEN",
+    "SYN_SENT",
+    "SYN_RCVD",
+    "ESTABLISHED",
+    "FIN_WAIT_1",
+    "FIN_WAIT_2",
+    "CLOSING",
+    "TIME_WAIT",
+    "CLOSE_WAIT",
+    "LAST_ACK"
+  ],
+  "inicial": "CLOSED",
+  "aceptacion": [
+    "CLOSED"
+  ],
+  "transiciones": [
+    {
+      "desde": "CLOSED",
+      "lee": "A",
+      "hacia": [
+        "SYN_SENT"
+      ]
+    },
+    {
+      "desde": "CLOSED",
+      "lee": "P",
+      "hacia": [
+        "LISTEN"
+      ]
+    },
+    {
+      "desde": "LISTEN",
+      "lee": "C",
+      "hacia": [
+        "CLOSED"
+      ]
+    },
+    {
+      "desde": "LISTEN",
+      "lee": "E",
+      "hacia": [
+        "SYN_SENT"
+      ]
+    },
+    {
+      "desde": "LISTEN",
+      "lee": "S",
+      "hacia": [
+        "SYN_RCVD"
+      ]
+    },
+    {
+      "desde": "SYN_SENT",
+      "lee": "C",
+      "hacia": [
+        "CLOSED"
+      ]
+    },
+    {
+      "desde": "SYN_SENT",
+      "lee": "S",
+      "hacia": [
+        "SYN_RCVD"
+      ]
+    },
+    {
+      "desde": "SYN_SENT",
+      "lee": "Y",
+      "hacia": [
+        "ESTABLISHED"
+      ]
+    },
+    {
+      "desde": "SYN_RCVD",
+      "lee": "C",
+      "hacia": [
+        "FIN_WAIT_1"
+      ]
+    },
+    {
+      "desde": "SYN_RCVD",
+      "lee": "K",
+      "hacia": [
+        "ESTABLISHED"
+      ]
+    },
+    {
+      "desde": "SYN_RCVD",
+      "lee": "R",
+      "hacia": [
+        "LISTEN"
+      ]
+    },
+    {
+      "desde": "ESTABLISHED",
+      "lee": "C",
+      "hacia": [
+        "FIN_WAIT_1"
+      ]
+    },
+    {
+      "desde": "ESTABLISHED",
+      "lee": "F",
+      "hacia": [
+        "CLOSE_WAIT"
+      ]
+    },
+    {
+      "desde": "FIN_WAIT_1",
+      "lee": "F",
+      "hacia": [
+        "CLOSING"
+      ]
+    },
+    {
+      "desde": "FIN_WAIT_1",
+      "lee": "K",
+      "hacia": [
+        "FIN_WAIT_2"
+      ]
+    },
+    {
+      "desde": "FIN_WAIT_1",
+      "lee": "X",
+      "hacia": [
+        "TIME_WAIT"
+      ]
+    },
+    {
+      "desde": "FIN_WAIT_2",
+      "lee": "F",
+      "hacia": [
+        "TIME_WAIT"
+      ]
+    },
+    {
+      "desde": "CLOSING",
+      "lee": "K",
+      "hacia": [
+        "TIME_WAIT"
+      ]
+    },
+    {
+      "desde": "TIME_WAIT",
+      "lee": "T",
+      "hacia": [
+        "CLOSED"
+      ]
+    },
+    {
+      "desde": "CLOSE_WAIT",
+      "lee": "C",
+      "hacia": [
+        "LAST_ACK"
+      ]
+    },
+    {
+      "desde": "LAST_ACK",
+      "lee": "K",
+      "hacia": [
+        "CLOSED"
+      ]
+    }
+  ],
+  "descripcion": "Eventos: P = abrir en modo pasivo (el servidor escucha); A = abrir en modo activo (se envía SYN); E = la aplicación envía datos desde LISTEN (se envía SYN); S = se recibe SYN; Y = se recibe SYN+ACK; K = se recibe ACK; F = se recibe FIN; X = se recibe FIN+ACK; R = se recibe RST; C = la aplicación cierra (close); T = vence el temporizador 2·MSL",
+  "posiciones": {
+    "CLOSED": [
+      420.0,
+      60.0
+    ],
+    "LISTEN": [
+      250.0,
+      180.0
+    ],
+    "SYN_SENT": [
+      600.0,
+      180.0
+    ],
+    "SYN_RCVD": [
+      250.0,
+      320.0
+    ],
+    "ESTABLISHED": [
+      600.0,
+      320.0
+    ],
+    "FIN_WAIT_1": [
+      250.0,
+      470.0
+    ],
+    "CLOSE_WAIT": [
+      800.0,
+      470.0
+    ],
+    "FIN_WAIT_2": [
+      250.0,
+      620.0
+    ],
+    "CLOSING": [
+      480.0,
+      470.0
+    ],
+    "TIME_WAIT": [
+      480.0,
+      620.0
+    ],
+    "LAST_ACK": [
+      800.0,
+      620.0
+    ]
+  }
+}

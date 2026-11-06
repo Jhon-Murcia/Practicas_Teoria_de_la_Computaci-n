@@ -1,0 +1,70 @@
+{
+  "tipo": "AFND-lambda",
+  "nombre": "a*b*c*",
+  "alfabeto": [
+    "a",
+    "b",
+    "c"
+  ],
+  "estados": [
+    "p",
+    "q",
+    "r"
+  ],
+  "inicial": "p",
+  "aceptacion": [
+    "r"
+  ],
+  "transiciones": [
+    {
+      "desde": "p",
+      "lee": "",
+      "hacia": [
+        "q"
+      ]
+    },
+    {
+      "desde": "p",
+      "lee": "a",
+      "hacia": [
+        "p"
+      ]
+    },
+    {
+      "desde": "q",
+      "lee": "",
+      "hacia": [
+        "r"
+      ]
+    },
+    {
+      "desde": "q",
+      "lee": "b",
+      "hacia": [
+        "q"
+      ]
+    },
+    {
+      "desde": "r",
+      "lee": "c",
+      "hacia": [
+        "r"
+      ]
+    }
+  ],
+  "descripcion": "Cada transición λ permite pasar al bloque siguiente sin leer nada.",
+  "posiciones": {
+    "p": [
+      120.0,
+      200.0
+    ],
+    "q": [
+      340.0,
+      200.0
+    ],
+    "r": [
+      560.0,
+      200.0
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<automata tipo="AFND-lambda" nombre="a*b*c*">
+  <descripcion>Cada transición λ permite pasar al bloque siguiente sin leer nada.</descripcion>
+  <alfabeto>
+    <simbolo>a</simbolo>
+    <simbolo>b</simbolo>
+    <simbolo>c</simbolo>
+  </alfabeto>
+  <estados>
+    <estado nombre="p" inicial="true" x="120.0" y="200.0" />
+    <estado nombre="q" x="340.0" y="200.0" />
+    <estado nombre="r" aceptacion="true" x="560.0" y="200.0" />
+  </estados>
+  <transiciones>
+    <transicion desde="p" lee="" hacia="q" />
+    <transicion desde="p" lee="a" hacia="p" />
+    <transicion desde="q" lee="" hacia="r" />
+    <transicion desde="q" lee="b" hacia="q" />
+    <transicion desde="r" lee="c" hacia="r" />
+  </transiciones>
+</automata>

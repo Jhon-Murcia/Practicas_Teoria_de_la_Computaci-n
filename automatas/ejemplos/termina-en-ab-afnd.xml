@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<automata tipo="AFND" nombre="Termina en ab">
+  <descripcion>En q0 el autómata «adivina» cuándo empieza el sufijo ab.</descripcion>
+  <alfabeto>
+    <simbolo>a</simbolo>
+    <simbolo>b</simbolo>
+  </alfabeto>
+  <estados>
+    <estado nombre="q0" inicial="true" x="110.0" y="200.0" />
+    <estado nombre="q1" x="330.0" y="200.0" />
+    <estado nombre="q2" aceptacion="true" x="550.0" y="200.0" />
+  </estados>
+  <transiciones>
+    <transicion desde="q0" lee="a" hacia="q0" />
+    <transicion desde="q0" lee="a" hacia="q1" />
+    <transicion desde="q0" lee="b" hacia="q0" />
+    <transicion desde="q1" lee="b" hacia="q2" />
+  </transiciones>
+</automata>

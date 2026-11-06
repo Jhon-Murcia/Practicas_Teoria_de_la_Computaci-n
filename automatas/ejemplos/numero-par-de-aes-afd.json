@@ -1,0 +1,57 @@
+{
+  "tipo": "AFD",
+  "nombre": "Número par de aes",
+  "alfabeto": [
+    "a",
+    "b"
+  ],
+  "estados": [
+    "par",
+    "impar"
+  ],
+  "inicial": "par",
+  "aceptacion": [
+    "par"
+  ],
+  "transiciones": [
+    {
+      "desde": "par",
+      "lee": "a",
+      "hacia": [
+        "impar"
+      ]
+    },
+    {
+      "desde": "par",
+      "lee": "b",
+      "hacia": [
+        "par"
+      ]
+    },
+    {
+      "desde": "impar",
+      "lee": "a",
+      "hacia": [
+        "par"
+      ]
+    },
+    {
+      "desde": "impar",
+      "lee": "b",
+      "hacia": [
+        "impar"
+      ]
+    }
+  ],
+  "descripcion": "El estado recuerda la paridad del número de aes leídas.",
+  "posiciones": {
+    "par": [
+      140.0,
+      200.0
+    ],
+    "impar": [
+      400.0,
+      200.0
+    ]
+  }
+}
