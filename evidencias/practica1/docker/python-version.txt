@@ -1,0 +1,6 @@
+$ docker compose run --rm py311 python --version
+Python 3.11.18
+$ docker compose run --rm py312 python --version
+Python 3.12.16
+$ docker compose run --rm py313 python --version
+Python 3.13.18
