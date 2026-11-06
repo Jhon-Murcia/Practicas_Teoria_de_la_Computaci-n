@@ -235,7 +235,7 @@ def _es_atomico(p: str) -> bool:
     """¿La expresión de ``re`` admite un cuantificador sin agruparla?"""
     if len(p) == 1 or (len(p) == 2 and p[0] == "\\"):
         return True
-    if p.startswith("[") and p.endswith("]") and p.count("]") - p.count("\]") == 1:
+    if p.startswith("[") and p.endswith("]") and p.count("]") - p.count("\\]") == 1:
         return True
     if p.startswith("(?:") and p.endswith(")"):
         nivel = 0
