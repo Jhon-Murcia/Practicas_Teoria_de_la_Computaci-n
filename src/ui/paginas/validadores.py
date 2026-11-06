@@ -100,8 +100,19 @@ class PaginaValidadores:
         r = simular(V.automata_minimo(self.clave), list(valor))
         coincide = bool(re.fullmatch(v.python, valor)) == r.aceptada
         color = T.exito if r.aceptada else T.error
-        detalle = r.error or (f"El AFD mínimo termina en {', '.join(sorted(r.finales)) or '∅'}"
-                              + (" (estado de aceptación)." if r.aceptada else "."))
+        minimo = V.automata_minimo(self.clave)
+        muertos = set(estados_muertos(minimo))
+        final = ", ".join(sorted(r.finales)) or "∅"
+        if r.error:
+            detalle = r.error
+        elif r.aceptada:
+            detalle = f"El AFD mínimo termina en {final}, un estado de aceptación."
+        elif r.finales & muertos:
+            leido = next((i for i, p in enumerate(r.pasos) if p.despues & muertos), len(r.pasos))
+            detalle = (f"El AFD mínimo cae en el estado de error {final} al leer el carácter {leido + 1} "
+                       f"(«{valor[leido] if leido < len(valor) else ''}»): ninguna continuación es válida.")
+        else:
+            detalle = f"El texto terminó en {final}, que no es de aceptación: le falta una parte."
         self.resultado.content = ft.Container(ft.Row([
             ft.Icon(ft.Icons.VERIFIED if r.aceptada else ft.Icons.GPP_BAD_OUTLINED, color=color, size=28),
             ft.Column([texto("VÁLIDO" if r.aceptada else "NO VÁLIDO", 15, color, peso=ft.FontWeight.W_800),
