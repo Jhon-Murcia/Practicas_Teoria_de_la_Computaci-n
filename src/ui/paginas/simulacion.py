@@ -367,7 +367,7 @@ class PaginaSimulacion:
             ft.ResponsiveRow([ft.Container(izquierda, col={"xs": 12, "lg": 7}),
                               ft.Container(derecha, col={"xs": 12, "lg": 5})], spacing=16, run_spacing=16),
             tarjeta(self.inferior),
-        ], spacing=20)
+        ], spacing=20, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
 
 
 def construir(estado: Estado) -> ft.Control:

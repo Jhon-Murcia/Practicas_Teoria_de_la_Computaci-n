@@ -114,6 +114,26 @@ def arista(origen: str, destino: str, etiqueta: str, p: tuple[float, float], q: 
                   (pico[0] + nx * 12, pico[1] + ny * 12))
 
 
+def resumir_simbolos(simbolos: list[str], mostrar=lambda s: s) -> str:
+    """Etiqueta de una arista: los tramos consecutivos de 3 o más caracteres se
+    resumen como rango (``0, 1, …, 9`` → ``0–9``; ``a, b, c`` → ``a–c``)."""
+    simples = sorted({s for s in simbolos if len(s) == 1 and s.isalnum()}, key=ord)
+    otros = [s for s in simbolos if s not in simples]
+    partes: list[str] = [mostrar(s) for s in otros if s == ""]
+    i = 0
+    while i < len(simples):
+        j = i
+        while j + 1 < len(simples) and ord(simples[j + 1]) == ord(simples[j]) + 1                 and simples[j + 1].isdigit() == simples[i].isdigit():
+            j += 1
+        if j - i >= 2:
+            partes.append(f"{simples[i]}–{simples[j]}")
+        else:
+            partes.extend(simples[i:j + 1])
+        i = j + 1
+    partes.extend(mostrar(s) for s in otros if s != "")
+    return ", ".join(partes)
+
+
 def aristas(posiciones: dict[str, tuple[float, float]], grupos: dict[tuple[str, str], list[str]],
             mostrar=lambda s: s) -> list[Arista]:
     """Una :class:`Arista` por par (origen, destino) con todos sus símbolos."""
@@ -121,7 +141,7 @@ def aristas(posiciones: dict[str, tuple[float, float]], grupos: dict[tuple[str, 
     for (o, d), simbolos in grupos.items():
         if o not in posiciones or d not in posiciones:
             continue
-        etiqueta = ", ".join(mostrar(s) for s in simbolos)
+        etiqueta = resumir_simbolos(simbolos, mostrar)
         curvar = o != d and (d, o) in grupos
         res.append(arista(o, d, etiqueta, posiciones[o], posiciones[d], curvar))
     return res

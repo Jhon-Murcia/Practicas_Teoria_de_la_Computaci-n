@@ -11,12 +11,12 @@
 | **Número de boleta** | _(escriba su boleta)_ |
 | **Grupo** | _(escriba su grupo)_ |
 | **Profesor** | _(escriba el nombre del profesor)_ |
-| **Fecha de entrega** | Práctica 1: martes 22 de septiembre de 2026 |
+| **Fechas de entrega** | Práctica 1: martes 22 de septiembre de 2026 · Práctica 2: martes 6 de octubre de 2026 |
 
 Un único software, construido de forma acumulativa a lo largo de las prácticas, para estudiar
 cadenas, lenguajes y autómatas finitos con una interfaz gráfica en **Python + Flet**.
 
-![Interfaz](evidencias/practica1/app/02-cadenas-contenedor.png)
+![Editor de autómatas](evidencias/practica2/app/01-editor-tcp.png)
 
 ## Índice
 
@@ -32,6 +32,21 @@ cadenas, lenguajes y autómatas finitos con una interfaz gráfica en **Python + 
 | [conclusiones.md](docs/practica1/conclusiones.md) | Conclusiones |
 | [bibliografia.md](docs/practica1/bibliografia.md) | Bibliografía |
 
+### Práctica 2 — AFND, simulación e importación/exportación
+
+| Documento | Contenido |
+|---|---|
+| [01-entorno.md](docs/practica2/01-entorno.md) | Reutilización del entorno, flujo de ramas e integración continua |
+| [02-jflap.md](docs/practica2/02-jflap.md) | AFND y AFND-λ en JFLAP (a cargo del alumno) |
+| [03-simulador.md](docs/practica2/03-simulador.md) | Simulador: arquitectura, formatos, decisión de diseño, pruebas |
+| [04-investigacion.md](docs/practica2/04-investigacion.md) | Investigación y estado del arte (a cargo del alumno) |
+| [05-del-articulo-al-automata.md](docs/practica2/05-del-articulo-al-automata.md) | Autómata de aplicación: conexión TCP |
+| [propuesta.md](docs/practica2/propuesta.md) | Propuesta de trabajo (opcional) |
+| [bibliografia.md](docs/practica2/bibliografia.md) | Bibliografía |
+
+> `src/core/lenguajes.py` y sus pruebas **proceden de la Práctica 1** (rama
+> [`practica1`](https://github.com/Jhon-Murcia/Practicas_Teoria_de_la_Computaci-n/tree/practica1)) y se reutilizan sin reescribirse.
+
 ## Funcionalidades
 
 | Módulo | Práctica | Qué hace |
@@ -39,7 +54,10 @@ cadenas, lenguajes y autómatas finitos con una interfaz gráfica en **Python + 
 | Inicio | 1 | Panel con indicadores, accesos rápidos y actividad reciente |
 | Cadenas | 1 | Prefijos, sufijos y subcadenas; conteos y exportación a `.txt` |
 | Lenguajes | 1 | Σ*, Σ⁺ y Σⁿ con límite de 200 000 cadenas; operaciones entre lenguajes finitos |
-| Ayuda | 1 | Convenciones matemáticas y guía de uso |
+| Editor | 2 | Editor visual (estados, transiciones, λ, zoom, arrastre), definición formal, tabla δ editable, deshacer/rehacer, diagnóstico de determinismo |
+| Simulación | 2 | Validación paso a paso con cinta, λ-clausura, traza, árbol de caminos y pruebas rápidas |
+| Archivos | 2 | Importar/exportar `.jff`, `.json`, `.xml`; proyectos con varios autómatas |
+| Ayuda | 1-2 | Convenciones matemáticas y guía de uso |
 
 Tema oscuro (predeterminado) y claro; el menú lateral se compacta en pantallas estrechas.
 
@@ -51,13 +69,15 @@ README.md  .gitignore  .gitattributes  requirements.txt  pytest.ini
 entorno/Dockerfile  entorno/compose.yml
 src/
   app.py                 punto de entrada
-  core/lenguajes.py      núcleo: funciones puras, sin Flet
+  core/                  núcleo sin Flet: lenguajes, autómata, simulación, ejemplos
+  formatos/              lectura y escritura de .jff, .json y .xml
   ui/                    interfaz (tema, estado, componentes, páginas)
   assets/fonts/          tipografías incluidas (SIL OFL)
 tests/                   pruebas con pytest
-docs/practica1/          reporte de la Práctica 1
-automatas/               archivos .jff
-evidencias/practica1/    git/ docker/ jflap/ app/
+docs/practicaN/          reporte de cada práctica
+automatas/               ejemplos/ y aplicacion/ en .jff, .json y .xml
+herramientas/            utilidades (exportar los ejemplos)
+evidencias/practicaN/    git/ ci/ docker/ jflap/ app/
 ```
 
 ## Cómo ejecutar
@@ -98,6 +118,12 @@ pytest -q                        # ejecuta las pruebas
   [01-entorno.md](docs/practica1/01-entorno.md)).
 
 ## Convenciones
+
+* **λ en los archivos**: en los tres formatos la transición λ es el símbolo leído vacío:
+  `<read/>` en `.jff`, `"lee": ""` en `.json` y `lee=""` en `.xml`. Al leer `.json` y `.xml` también
+  se aceptan `λ`, `lambda` y `ε`. JFLAP no guarda Σ: al importar un `.jff` se deduce de las transiciones.
+* **No determinismo**: el simulador sigue todos los caminos a la vez (conjunto de estados activos con
+  λ-clausura); la justificación y el coste están en [03-simulador.md](docs/practica2/03-simulador.md).
 
 * **λ** es la cadena vacía. Se escribe `λ`, `lambda` o se deja el campo vacío.
 * λ y la propia *w* se cuentan entre los prefijos y sufijos de *w*: hay *n + 1* de cada uno.

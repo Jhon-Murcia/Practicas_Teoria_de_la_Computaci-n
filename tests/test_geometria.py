@@ -36,3 +36,11 @@ def test_estado_en_y_caja():
     x0, y0, x1, y1 = caja(pos)
     assert x0 < 0 < 100 < x1 and y0 < 0 < y1
     assert math.isclose(x1 - x0, 240)
+
+
+def test_resumen_de_simbolos_en_rangos():
+    from ui.geometria import resumir_simbolos
+    assert resumir_simbolos([str(i) for i in range(10)]) == "0–9"
+    assert resumir_simbolos(["a", "b"]) == "a, b"
+    assert resumir_simbolos(["", "+", "-"], lambda s: s or "λ") == "λ, +, -"
+    assert resumir_simbolos(["a", "b", "c", "x", "1", "2", "3"]) == "1–3, a–c, x"

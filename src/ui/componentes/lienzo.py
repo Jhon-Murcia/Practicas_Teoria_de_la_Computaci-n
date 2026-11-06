@@ -398,8 +398,9 @@ class Lienzo:
             formas.append(cv.Circle(x, y, r - 5 * self.zoom,
                                     paint=ft.Paint(color=borde, style=ft.PaintingStyle.STROKE,
                                                    stroke_width=1.6 * max(self.zoom, 0.6))))
-        etiqueta = q if len(q) <= 9 else q[:8] + "…"
-        tam = (13 if len(etiqueta) <= 4 else 11 if len(etiqueta) <= 7 else 9.5) * self.zoom
+        etiqueta = q if len(q) <= 12 else q[:11] + "…"
+        n = len(etiqueta)
+        tam = (13 if n <= 4 else 11 if n <= 6 else 9 if n <= 8 else 7.4) * self.zoom
         formas.append(cv.Text(x, y, etiqueta, alignment=ft.Alignment.CENTER,
                               style=ft.TextStyle(size=tam, color=T.estado_texto if not atenuado else T.texto_3,
                                                  font_family=FUENTE_MONO, weight=ft.FontWeight.W_700)))
