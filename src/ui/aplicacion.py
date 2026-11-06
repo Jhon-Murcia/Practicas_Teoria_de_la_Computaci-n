@@ -15,10 +15,10 @@ import flet as ft
 
 from ui.estado import Estado
 from ui.tema import CLARO, FUENTES, OSCURO, RADIO_CHICO, T, alfa, tema_flet
-from ui.paginas import ayuda, cadenas, inicio, lenguajes
+from ui.paginas import archivos, ayuda, cadenas, editor, inicio, lenguajes, simulacion
 
 NOMBRE_APP = "AutómataLab"
-VERSION = "1.0 · Práctica 1"
+VERSION = "2.0 · Práctica 2"
 
 
 @dataclass(frozen=True)
@@ -40,6 +40,12 @@ MODULOS: list[Modulo] = [
            "Lenguajes", cadenas.construir, "Prefijos, sufijos y subcadenas"),
     Modulo("lenguajes", "Lenguajes", ft.Icons.ALL_INCLUSIVE_OUTLINED, ft.Icons.ALL_INCLUSIVE_ROUNDED,
            "Lenguajes", lenguajes.construir, "Σ*, Σ⁺ y operaciones entre lenguajes"),
+    Modulo("editor", "Editor", ft.Icons.ACCOUNT_TREE_OUTLINED, ft.Icons.ACCOUNT_TREE_ROUNDED,
+           "Autómatas", editor.construir, "Crear y editar AFD, AFND y AFND-λ", desplazable=False),
+    Modulo("simulacion", "Simulación", ft.Icons.PLAY_CIRCLE_OUTLINE, ft.Icons.PLAY_CIRCLE_ROUNDED,
+           "Autómatas", simulacion.construir, "Validar cadenas paso a paso"),
+    Modulo("archivos", "Archivos", ft.Icons.FOLDER_OPEN_OUTLINED, ft.Icons.FOLDER_OPEN_ROUNDED,
+           "Autómatas", archivos.construir, "Importar y exportar .jff, .json y .xml"),
     Modulo("ayuda", "Ayuda", ft.Icons.HELP_OUTLINE_ROUNDED, ft.Icons.HELP_ROUNDED,
            "Soporte", ayuda.construir, "Guía y convenciones"),
 ]
@@ -62,6 +68,7 @@ class Aplicacion:
             expand=True,
         )
         page.on_resize = self._al_redimensionar
+        page.on_keyboard_event = self._al_teclear
 
     # ------------------------------------------------------------------
     def iniciar(self) -> None:
@@ -70,6 +77,8 @@ class Aplicacion:
         p.fonts = FUENTES
         p.padding = 0
         p.spacing = 0
+        self.estado.ancho = float(p.width or 1440)
+        self.compacto = self.estado.ancho < 1100
         self._aplicar_tema()
         self.estado.registrar("Sesión iniciada", ft.Icons.PLAY_CIRCLE_OUTLINE)
         self.reconstruir()
@@ -86,12 +95,22 @@ class Aplicacion:
         self._aplicar_tema()
         self.reconstruir()
 
+    @staticmethod
+    def _clase(ancho: float) -> int:
+        """Rangos de ancho en los que cambia la distribución de la interfaz."""
+        return 0 if ancho < 1100 else (1 if ancho < 1380 else 2)
+
     def _al_redimensionar(self, e) -> None:
-        ancho = getattr(e, "width", None) or self.page.width or 1400
-        compacto = ancho < 1100
-        if compacto != self.compacto:
-            self.compacto = compacto
+        ancho = float(getattr(e, "width", None) or self.page.width or 1440)
+        anterior = self._clase(self.estado.ancho)
+        self.estado.ancho = ancho
+        self.compacto = ancho < 1100
+        if self._clase(ancho) != anterior:
             self.reconstruir()
+
+    def _al_teclear(self, e) -> None:
+        if self.estado.teclado is not None:
+            self.estado.teclado(e)
 
     # ------------------------------------------------------------------
     def ir(self, clave: str) -> None:
@@ -105,6 +124,7 @@ class Aplicacion:
 
     def reconstruir(self) -> None:
         modulo = self._modulo()
+        self.estado.teclado = None
         try:
             vista = modulo.construir(self.estado)
         except Exception as exc:  # una pantalla rota no debe tumbar la aplicación

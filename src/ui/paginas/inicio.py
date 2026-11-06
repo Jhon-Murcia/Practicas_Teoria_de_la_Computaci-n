@@ -72,7 +72,9 @@ def _acceso(estado: Estado, modulo) -> ft.Control:
 
 def metricas_extra(estado: Estado) -> list[ft.Control]:
     """Indicadores que dependen de los módulos de cada práctica."""
-    return []
+    a = estado.actual
+    return [metrica("Autómatas en la sesión", f"{len(estado.automatas)}", ft.Icons.ACCOUNT_TREE_OUTLINED, T.exito,
+                    f"actual: {a.nombre[:24]} ({a.tipo})" if a else "ninguno seleccionado")]
 
 
 def construir(estado: Estado) -> ft.Control:
