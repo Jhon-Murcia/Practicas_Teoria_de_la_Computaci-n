@@ -15,6 +15,7 @@ from typing import Any, Callable, Optional
 
 import flet as ft
 
+from core.automata import Automata
 from ui.tema import T
 
 
@@ -36,6 +37,43 @@ class Estado:
     navegar: Callable[[str], None] = lambda clave: None
     picker: Optional[ft.FilePicker] = None
     modulos: list[Any] = field(default_factory=list)
+    automatas: list[Automata] = field(default_factory=list)
+    indice: int = -1
+    teclado: Optional[Callable[[Any], None]] = None
+    ancho: float = 1440.0
+
+    # ------------------------------------------------------------------
+    # Biblioteca de autómatas de la sesión
+    # ------------------------------------------------------------------
+    @property
+    def actual(self) -> Optional[Automata]:
+        if 0 <= self.indice < len(self.automatas):
+            return self.automatas[self.indice]
+        return None
+
+    def agregar_automata(self, a: Automata, seleccionar: bool = True) -> Automata:
+        """Añade un autómata; si el nombre ya existe se numera para distinguirlo."""
+        nombres = {x.nombre for x in self.automatas}
+        base, k = a.nombre or "Autómata", 2
+        while a.nombre in nombres:
+            a.nombre = f"{base} ({k})"
+            k += 1
+        self.automatas.append(a)
+        if seleccionar:
+            self.indice = len(self.automatas) - 1
+        self.registrar(f"Autómata «{a.nombre}» agregado ({a.tipo})", ft.Icons.ACCOUNT_TREE_OUTLINED)
+        return a
+
+    def seleccionar(self, indice: int) -> None:
+        if 0 <= indice < len(self.automatas):
+            self.indice = indice
+
+    def eliminar_automata(self, indice: int) -> None:
+        if 0 <= indice < len(self.automatas):
+            quitado = self.automatas.pop(indice)
+            self.registrar(f"Autómata «{quitado.nombre}» eliminado", ft.Icons.DELETE_OUTLINE)
+            if self.indice >= len(self.automatas):
+                self.indice = len(self.automatas) - 1
 
     # ------------------------------------------------------------------
     # Memoria por pantalla
@@ -54,6 +92,60 @@ class Estado:
         hora = _dt.datetime.now().strftime("%H:%M:%S")
         self.actividad.insert(0, Actividad(hora, icono, texto, color))
         del self.actividad[40:]
+
+    def confirmar(self, titulo: str, mensaje: str, accion: Callable[[], None], etiqueta: str = "Eliminar") -> None:
+        """Diálogo de confirmación antes de una acción destructiva."""
+        def aceptar(e):
+            self.page.pop_dialog()
+            accion()
+
+        self.page.show_dialog(ft.AlertDialog(
+            modal=True,
+            title=ft.Text(titulo, size=18, weight=ft.FontWeight.W_700),
+            content=ft.Text(mensaje, color=T.texto_2),
+            actions=[ft.TextButton("Cancelar", on_click=lambda e: self.page.pop_dialog()),
+                     ft.FilledButton(etiqueta, on_click=aceptar,
+                                     style=ft.ButtonStyle(bgcolor=T.error, color="#FFFFFF"))],
+            bgcolor=T.superficie,
+            shape=ft.RoundedRectangleBorder(radius=16),
+        ))
+
+    def pedir_texto(self, titulo: str, etiqueta: str, accion: Callable[[str], Optional[str]], valor: str = "",
+                    ayuda: str = "", insertar: tuple[str, ...] = ()) -> None:
+        """Pide un texto; ``accion`` devuelve un mensaje de error o ``None``.
+
+        ``insertar`` añade botones que escriben símbolos difíciles de teclear (λ).
+        """
+        campo = ft.TextField(label=etiqueta, value=valor, autofocus=True, helper=ayuda or None,
+                             helper_max_lines=2, border_radius=10, focused_border_color=T.primario)
+
+        def agregar(simbolo: str):
+            actual = (campo.value or "").rstrip()
+            campo.value = f"{actual}, {simbolo}" if actual else simbolo
+            campo.update()
+
+        botones = [ft.OutlinedButton(f"Insertar {s}", on_click=lambda e, s=s: agregar(s)) for s in insertar]
+
+        def aceptar(e=None):
+            error = accion(campo.value or "")
+            if error:
+                campo.error = error
+                campo.update()
+            else:
+                self.page.pop_dialog()
+
+        campo.on_submit = aceptar
+        self.page.show_dialog(ft.AlertDialog(
+            modal=True,
+            title=ft.Text(titulo, size=18, weight=ft.FontWeight.W_700),
+            content=ft.Container(ft.Column([campo, ft.Row(botones, spacing=8)], tight=True, spacing=10),
+                                 width=400),
+            actions=[ft.TextButton("Cancelar", on_click=lambda e: self.page.pop_dialog()),
+                     ft.FilledButton("Aceptar", on_click=aceptar,
+                                     style=ft.ButtonStyle(bgcolor=T.primario, color="#FFFFFF"))],
+            bgcolor=T.superficie,
+            shape=ft.RoundedRectangleBorder(radius=16),
+        ))
 
     def notificar(self, mensaje: str, tipo: str = "info") -> None:
         colores = {
