@@ -110,6 +110,32 @@ SECCIONES: list[tuple[str, object, str]] = [
 """,
     ),
     (
+        "Expresiones regulares (Práctica 4)", ft.Icons.FUNCTIONS,
+        """
+* Notación del curso: `+` unión, yuxtaposición para concatenar, `*` cerradura, `λ` palabra vacía, `∅`
+  lenguaje vacío y paréntesis. Precedencia: `*` antes que la concatenación y ésta antes que `+`.
+* `\c` usa el carácter c como símbolo aunque sea un operador: `\+`, `\*`, `\(`, `\)` y `\ ` (espacio).
+  Los espacios sin escapar se ignoran.
+* **Clases**: declare una por línea, `D = [0-9]` o `V = a+e+i+o+u`, y úsela como `{D}`.
+* Si la expresión está mal formada se indica la **posición** del error con una flecha.
+* **ER → Autómata** muestra el árbol sintáctico y la construcción de Thompson paso a paso; después se
+  aplican los algoritmos de la Práctica 3 hasta el AFD mínimo. Cada etapa se exporta a `.jff`.
+* **Autómata → ER** verifica que el autómata sea determinista (si no, indica el estado y el símbolo) y lo
+  convierte por eliminación de estados. Puede comparar el resultado con la expresión de JFLAP.
+* **No confunda** esta notación con la de `re`: en Python `+` significa «una o más veces» y la unión es `|`.
+""",
+    ),
+    (
+        "Validadores", ft.Icons.VERIFIED,
+        """
+* Correo, teléfono nacional, fecha y URL, cada uno definido con una expresión en la notación del curso y
+  validado con su AFD mínimo. Se muestra también la traducción a `re` y el número de estados antes y
+  después de minimizar.
+* Toda expresión para correos o URL es una **aproximación** de la norma; la sección *Alcance y límites*
+  indica qué casos quedan fuera.
+""",
+    ),
+    (
         "Atajos", ft.Icons.KEYBOARD,
         """
 * **Enter** en un campo de texto ejecuta la operación principal de la pantalla.

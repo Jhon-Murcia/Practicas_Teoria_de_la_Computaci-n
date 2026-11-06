@@ -112,6 +112,7 @@ class Reproductor:
         if not self.pasos:
             self.cabecera.content = texto(self.vacio, 13, T.texto_3)
             self.detalle.controls = []
+            self.lienzo.mensaje_vacio = self.vacio
             self.lienzo.usar(None)
             refrescar(self.controles, self.cabecera, self.detalle)
             return
@@ -130,7 +131,11 @@ class Reproductor:
         if paso.tabla:
             contenido.append(tabla_control(paso.tabla, resaltar_ultima=paso.tipo == "nuevo"))
         self.detalle.controls = contenido
-        if paso.automata is not None:
+        if paso.automata is None:
+            self.lienzo.mensaje_vacio = "Este paso no tiene diagrama: vea la explicación a la derecha."
+            self._estados_previos = None
+            self.lienzo.usar(None, ajustar=False)
+        else:
             nuevos = frozenset(paso.automata.estados)
             cambia = nuevos != self._estados_previos
             self._estados_previos = nuevos

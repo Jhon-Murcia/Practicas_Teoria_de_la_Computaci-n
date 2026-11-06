@@ -58,6 +58,7 @@ class Lienzo:
         self.color_resaltado = T.acento
         self.atenuados: set[str] = set()
         self.etiquetas_extra: dict[str, str] = {}
+        self.mensaje_vacio = "No hay un autómata seleccionado"
 
         self._arrastrando: Optional[str] = None
         self._ultimo: Optional[tuple[float, float]] = None
@@ -279,7 +280,7 @@ class Lienzo:
         if self.mostrar_rejilla:
             formas.extend(self._rejilla())
         if self.a is None:
-            formas.append(cv.Text(self.ancho / 2, self.alto / 2, "No hay un autómata seleccionado",
+            formas.append(cv.Text(self.ancho / 2, self.alto / 2, self.mensaje_vacio,
                                   style=ft.TextStyle(size=14, color=T.texto_3, font_family=FUENTE),
                                   alignment=ft.Alignment.CENTER))
         else:

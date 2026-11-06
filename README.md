@@ -11,7 +11,7 @@
 | **Número de boleta** | _(escriba su boleta)_ |
 | **Grupo** | _(escriba su grupo)_ |
 | **Profesor** | _(escriba el nombre del profesor)_ |
-| **Fechas de entrega** | Práctica 1: martes 22 de septiembre de 2026 · Práctica 2: martes 6 de octubre de 2026 · Práctica 3: miércoles 4 de noviembre de 2026 (etiqueta `practica3`) |
+| **Fechas de entrega** | Práctica 1: martes 22 de septiembre de 2026 · Práctica 2: martes 6 de octubre de 2026 · Práctica 3: miércoles 4 de noviembre de 2026 (etiqueta `practica3`) · Práctica 4: viernes 6 de noviembre de 2026 (etiqueta `practica4`) |
 
 Un único software, construido de forma acumulativa a lo largo de las prácticas, para estudiar
 cadenas, lenguajes y autómatas finitos con una interfaz gráfica en **Python + Flet**.
@@ -59,6 +59,26 @@ Uso de las funciones nuevas: *Conversiones* (λ-clausura, eliminar λ, subconjun
 cadena completa), *Minimización* (AFD mínimo, tabla de pares, equivalencia) y *Simulación → Varias
 cadenas* (cargar un `.txt` y guardar el informe). Todos los algoritmos se ven paso a paso.
 
+### Práctica 4 — Expresiones regulares (etiqueta `practica4`)
+
+| Documento | Contenido |
+|---|---|
+| [01-investigacion.md](docs/practica4/01-investigacion.md) | Investigación (a cargo del alumno) |
+| [02-er-a-automata.md](docs/practica4/02-er-a-automata.md) | Analizador, notación, Thompson y cadena hasta el AFD mínimo |
+| [03-automata-a-er.md](docs/practica4/03-automata-a-er.md) | Verificación de determinismo, eliminación de estados y comparación con JFLAP |
+| [04-validadores.md](docs/practica4/04-validadores.md) | Correo, teléfono, fecha y URL; congruencia con `re.fullmatch` |
+
+**Notación aceptada por el analizador** (detalle en [02-er-a-automata.md](docs/practica4/02-er-a-automata.md)):
+`+` unión · yuxtaposición = concatenación · `*` cerradura · `λ` (o `ε`) palabra vacía · `∅` lenguaje
+vacío · `( )` agrupan. Precedencia: `*` > concatenación > `+`. `\c` usa el carácter c como símbolo
+(`\+`, `\*`, `\(`, `\)`, `\ `). Clases: se declaran como `D = [0-9]` y se usan como `{D}`.
+Una expresión mal formada se rechaza indicando la posición del error.
+
+Uso de las funciones nuevas: *Expresiones regulares* → **ER → Autómata** (árbol sintáctico, Thompson
+paso a paso, cada etapa exportable a `.jff`, validación de cadenas), **Autómata → ER** (importar `.jff`,
+verificar determinismo, eliminación de estados, comparar con la expresión de JFLAP) y **Comparar
+expresiones**; *Validadores* (escribir un texto y ver si es válido, con su AFD).
+
 ## Funcionalidades
 
 | Módulo | Práctica | Qué hace |
@@ -71,7 +91,9 @@ cadenas* (cargar un `.txt` y guardar el informe). Todos los algoritmos se ven pa
 | Archivos | 2 | Importar/exportar `.jff`, `.json`, `.xml`; proyectos con varios autómatas |
 | Conversiones | 3 | λ-clausura, eliminación de λ, subconjuntos (sólo alcanzables), autómata → ER, cadena completa, paso a paso |
 | Minimización | 3 | Inaccesibles, refinamiento de particiones, tabla de pares, equivalencia con contraejemplo |
-| Ayuda | 1-3 | Convenciones matemáticas y guía de uso |
+| Expresiones regulares | 4 | Analizador con errores por posición, Thompson paso a paso, ER → AFD mínimo, autómata → ER, equivalencia de expresiones |
+| Validadores | 4 | Correo, teléfono, fecha y URL con su AFD mínimo y su traducción a `re` |
+| Ayuda | 1-4 | Convenciones matemáticas y guía de uso |
 
 Tema oscuro (predeterminado) y claro; el menú lateral se compacta en pantallas estrechas.
 
@@ -85,7 +107,8 @@ src/
   app.py                 punto de entrada
   core/                  núcleo sin Flet: lenguajes, autómata, simulación, ejemplos
   formatos/              lectura y escritura de .jff, .json y .xml
-  algoritmos/            λ-clausura, eliminación de λ, subconjuntos, minimización, equivalencia, AFD → ER
+  algoritmos/            λ-clausura, eliminación de λ, subconjuntos, minimización, equivalencia,
+                         AFD → ER, Thompson, cadena ER → AFD mínimo, validadores
   ui/                    interfaz (tema, estado, componentes, páginas)
   assets/fonts/          tipografías incluidas (SIL OFL)
 tests/                   pruebas con pytest
@@ -125,12 +148,26 @@ python src/app.py                # abre la aplicación de escritorio
 pytest -q                        # ejecuta las pruebas
 ```
 
+## Entrega con etiquetas
+
+Las Prácticas 3 y 4 se identifican con las etiquetas `practica3` y `practica4`. Como en este
+repositorio también existen **ramas** con esos nombres, `git push origin practica3` falla por
+ambigüedad; use la referencia completa:
+
+```bash
+git tag -a practica4 -m "Entrega de la Practica 4"
+git push origin refs/tags/practica4
+```
+
 ## Versiones
 
 * **Flet 0.86.5** (`flet[web]`), **pytest 8.3.4**.
 * **FastAPI fijada en 0.144.0**: `flet-web 0.86.5` usa un argumento que FastAPI eliminó en
   0.145.0; con una versión posterior el servidor web no arranca (detalle en
   [01-entorno.md](docs/practica1/01-entorno.md)).
+* **Diferencia observada entre versiones**: una secuencia de escape inválida (`"\]"`) pasaba
+  inadvertida en Python 3.11 (`DeprecationWarning`, oculto por omisión) y en 3.12 y 3.13 producía un
+  `SyntaxWarning` visible en `pytest`. Se corrigió y `pytest.ini` trata ahora `SyntaxWarning` como error.
 
 ## Convenciones
 
