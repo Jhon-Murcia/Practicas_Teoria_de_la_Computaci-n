@@ -10,7 +10,8 @@ import flet as ft
 from core import ejemplos
 from core.automata import LAMBDA, Automata, mostrar_simbolo
 from core.lenguajes import mostrar
-from core.simulacion import Arbol, Nodo, Resultado, arbol_computacion, simular
+from core.simulacion import (Arbol, Nodo, Resultado, arbol_computacion, informe_lote, leer_lineas, simular,
+                             validar_lote)
 from ui.componentes.comunes import (aviso, boton, boton_icono, campo, chip, pestanas, refrescar, tarjeta, texto,
                                     titulo_pagina)
 from ui.componentes.lienzo import Lienzo
@@ -44,6 +45,8 @@ class PaginaSimulacion:
         self.pruebas = campo("Una cadena por línea", estado.recuperar("sim.pruebas", "ab\naab\nba\nλ\nbab"),
                              multiline=True, min_lines=6, max_lines=12)
         self.tabla_pruebas = ft.Column(spacing=6)
+        self.lote = []
+        self.origen_lote = ""
         self._construir_selector()
         self.validar(registrar=False)
 
@@ -226,10 +229,10 @@ class PaginaSimulacion:
                 self._fila("Activos antes", conjunto(p.antes, a)),
                 self._fila("Transiciones", ", ".join(f"δ({o},{s})→{d}" for o, s, d in p.transiciones) or
                            "ninguna: la computación muere", T.texto if p.transiciones else T.error),
-                self._fila("Tras leer el símbolo", conjunto(p.movimiento, a)),
+                self._fila("Tras leer (antes de λ-cl.)", conjunto(p.movimiento, a)),
                 self._fila("Transiciones λ", ", ".join(f"{o}→{d}" for o, _, d in p.transiciones_lambda) or "ninguna",
                            T.lambda_),
-                self._fila("Activos después", conjunto(p.despues, a), T.acento),
+                self._fila("Después de la λ-clausura", conjunto(p.despues, a), T.acento),
             ]
         activos, _ = self._activos()
         finales = activos & a.aceptacion
@@ -249,14 +252,17 @@ class PaginaSimulacion:
 
     def _construir_inferior(self) -> None:
         self.selector_pestana.content = pestanas(
-            [("traza", "Traza completa"), ("arbol", "Árbol de caminos"), ("pruebas", "Pruebas rápidas")],
+            [("traza", "Traza completa"), ("arbol", "Árbol de caminos"), ("pruebas", "Varias cadenas")],
             self.pestana, self._cambiar_pestana)
         if self.pestana == "arbol":
             cuerpo = self._arbol()
         elif self.pestana == "pruebas":
             cuerpo = ft.Column([
                 ft.Row([ft.Container(self.pruebas, expand=True),
-                        ft.Column([boton("Probar todas", self.probar_todas, ft.Icons.PLAYLIST_PLAY)])],
+                        ft.Column([boton("Validar todas", self.probar_todas, ft.Icons.PLAYLIST_PLAY),
+                                   boton("Cargar .txt", self.cargar_archivo, ft.Icons.UPLOAD_FILE, "secundario"),
+                                   boton("Guardar informe", self.guardar_informe, ft.Icons.SAVE_ALT, "secundario")],
+                                  spacing=8)],
                        vertical_alignment=ft.CrossAxisAlignment.START, spacing=12),
                 self.tabla_pruebas,
             ], spacing=12)
@@ -330,26 +336,43 @@ class PaginaSimulacion:
             ft.Container(ft.Column(lineas, spacing=1), padding=14, border_radius=10, bgcolor=T.superficie_2),
         ], spacing=10)
 
-    def probar_todas(self, e=None) -> None:
+    def probar_todas(self, e=None, origen: str = "") -> None:
         self.estado.recordar("sim.pruebas", self.pruebas.value)
-        lineas = [l.strip() for l in (self.pruebas.value or "").splitlines()]
-        lineas = [l for l in lineas if l]
-        filas = []
-        aceptadas = 0
-        for l in lineas:
-            w = "" if l in ("λ", "lambda") else l
-            r = simular(self.a, w)
-            aceptadas += r.aceptada
-            filas.append(ft.Row([
-                texto(mostrar(w), 13, mono=True, width=220),
-                chip("aceptada" if r.aceptada else "rechazada", T.exito if r.aceptada else T.error),
-                texto(r.error or ("finales: " + conjunto(r.finales, self.a)), 12, T.texto_3, expand=True),
-            ], spacing=12))
+        cadenas = leer_lineas(self.pruebas.value or "")
+        self.lote = validar_lote(self.a, cadenas)
+        self.origen_lote = origen
+        aceptadas = sum(r.aceptada for r in self.lote)
+        filas = [ft.Row([
+            texto(mostrar(r.cadena), 13, mono=True, width=220),
+            chip("aceptada" if r.aceptada else "rechazada", T.exito if r.aceptada else T.error),
+            texto(r.error or ("finales: " + conjunto(r.finales, self.a)), 12, T.texto_3, expand=True),
+        ], spacing=12) for r in self.lote[:400]]
+        if len(self.lote) > 400:
+            filas.append(texto(f"… {len(self.lote) - 400} más en el informe", 12, T.texto_3))
         self.tabla_pruebas.controls = [
-            texto(f"{len(lineas)} cadenas · {aceptadas} aceptadas · {len(lineas) - aceptadas} rechazadas", 13,
-                  T.texto_2, peso=ft.FontWeight.W_600), *filas]
-        self.estado.registrar(f"Pruebas rápidas: {len(lineas)} cadenas en {self.a.nombre}", ft.Icons.PLAYLIST_PLAY)
+            texto(f"{len(cadenas)} cadenas · {aceptadas} aceptadas · {len(cadenas) - aceptadas} rechazadas"
+                  + (f" · archivo {origen}" if origen else ""), 13, T.texto_2, peso=ft.FontWeight.W_600), *filas]
+        self.estado.registrar(f"Validadas {len(cadenas)} cadenas en {self.a.nombre}", ft.Icons.PLAYLIST_PLAY)
         refrescar(self.tabla_pruebas)
+
+    async def cargar_archivo(self, e=None) -> None:
+        archivo = await self.estado.abrir(["txt"])
+        if archivo is None:
+            return
+        nombre, datos = archivo
+        try:
+            contenido = datos.decode("utf-8-sig")
+        except UnicodeDecodeError:
+            contenido = datos.decode("latin-1")
+        self.pruebas.value = contenido
+        refrescar(self.pruebas)
+        self.probar_todas(origen=nombre)
+        self.estado.notificar(f"{len(self.lote)} cadenas leídas de {nombre}.", "exito")
+
+    async def guardar_informe(self, e=None) -> None:
+        if not getattr(self, "lote", None):
+            self.probar_todas()
+        await self.estado.guardar("informe_validacion.txt", informe_lote(self.a, self.lote, self.origen_lote), ["txt"])
 
     # ------------------------------------------------------------------
     def vista(self) -> ft.Control:
