@@ -1,0 +1,24 @@
+# Ejecuta la suite de pruebas con las tres versiones de Python en cada
+# confirmacion y en cada Pull Request. La matriz es el equivalente de los tres
+# contenedores del entorno local (entorno/compose.yml).
+name: pruebas
+
+on: [push, pull_request]
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      # El fallo de una version no cancela las otras dos.
+      fail-fast: false
+      matrix:
+        version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.version }}
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python --version
+      - run: pytest -q
