@@ -78,6 +78,38 @@ SECCIONES: list[tuple[str, object, str]] = [
 """,
     ),
     (
+        "Conversiones (Práctica 3)", ft.Icons.TRANSFORM,
+        """
+* Todos los algoritmos muestran sus **pasos reales**: avance con ▶, retroceda con ◀ o reprodúzcalos.
+  Cada paso resalta en el diagrama los estados y las aristas que intervienen y muestra su tabla.
+* **λ-clausura**: elija un estado para ver cómo se calcula; abajo está la tabla de todas las clausuras.
+* **Eliminar λ**: δ'(q, a) = λ-clausura(δ(λ-clausura(q), a)); pasan a ser de aceptación los estados cuya
+  clausura contiene un estado de F.
+* **Subconjuntos**: sólo se generan los subconjuntos alcanzables desde λ-clausura(q0); ∅ es el estado de error.
+* **Autómata → ER**: eliminación de estados sobre un autómata generalizado con inicio I y final F.
+* **Cadena completa**: AFN-λ → AFN → AFD → AFD mínimo, con el número de estados de cada etapa.
+* El botón *Agregar a la sesión* lleva el resultado a la biblioteca para editarlo, simularlo o exportarlo.
+""",
+    ),
+    (
+        "Minimización y equivalencia", ft.Icons.COMPRESS,
+        """
+* Se eliminan los estados inaccesibles, se completa δ con un sumidero si hace falta y se refina la partición
+  {F, Q − F} hasta que no cambia. Cada bloque final es un estado del AFD mínimo.
+* La **tabla de pares distinguibles** muestra en qué ronda se marca cada par.
+* Dos autómatas son **equivalentes** si sus AFD mínimos coinciden salvo el nombre de los estados. Si no lo son,
+  se muestra la cadena más corta que los distingue.
+""",
+    ),
+    (
+        "Validación de varias cadenas", ft.Icons.PLAYLIST_ADD_CHECK,
+        """
+* En *Simulación → Varias cadenas* escriba una cadena por línea o cargue un archivo `.txt`
+  (una por línea; `λ` es la vacía; las líneas en blanco se ignoran).
+* *Guardar informe* descarga un `.txt` con el resultado de cada cadena.
+""",
+    ),
+    (
         "Atajos", ft.Icons.KEYBOARD,
         """
 * **Enter** en un campo de texto ejecuta la operación principal de la pantalla.

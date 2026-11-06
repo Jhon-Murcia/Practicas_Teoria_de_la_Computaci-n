@@ -97,7 +97,8 @@ def leer_xml(texto: str | bytes, nombre: str = "Autómata") -> Automata:
         desde, hacia = t.get("desde"), t.get("hacia")
         if desde is None or hacia is None:
             raise ErrorFormato("Una <transicion> no tiene «desde» o «hacia».")
-        for d in hacia.split(","):
-            a.agregar_transicion(desde, leer_simbolo(t.get("lee") or ""), d.strip())
+        # Un <transicion> por destino: «hacia» no se divide, porque un nombre de
+        # estado puede contener comas (p. ej. «{q0,q1}» en la construcción de subconjuntos).
+        a.agregar_transicion(desde, leer_simbolo(t.get("lee") or ""), hacia.strip())
     a.validar(estricto=True)
     return a

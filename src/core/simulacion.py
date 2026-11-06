@@ -227,3 +227,40 @@ def caminos(arbol: Arbol) -> list[tuple[list[tuple[Optional[str], str]], str]]:
 
     recorrer(arbol.raiz, [])
     return salida
+
+
+# ---------------------------------------------------------------------------
+# Validación de varias cadenas (una por línea)
+# ---------------------------------------------------------------------------
+
+def leer_lineas(texto: str) -> list[str]:
+    """Una cadena por línea; ``λ``, ``lambda`` o ``ε`` en una línea es la vacía.
+
+    Las líneas en blanco se ignoran y se recortan los espacios de los extremos.
+    """
+    cadenas = []
+    for linea in texto.splitlines():
+        linea = linea.strip()
+        if not linea:
+            continue
+        cadenas.append("" if linea in ("λ", "lambda", "ε") else linea)
+    return cadenas
+
+
+def validar_lote(a: Automata, cadenas: list[str]) -> list[Resultado]:
+    return [simular(a, w) for w in cadenas]
+
+
+def informe_lote(a: Automata, resultados: list[Resultado], origen: str = "") -> str:
+    """Informe de texto con el resultado de cada cadena."""
+    aceptadas = sum(r.aceptada for r in resultados)
+    lineas = [f"Informe de validación - {a.nombre} ({a.tipo})"]
+    if origen:
+        lineas.append(f"Archivo: {origen}")
+    lineas += [f"Cadenas: {len(resultados)} · aceptadas: {aceptadas} · rechazadas: {len(resultados) - aceptadas}",
+               "", f"{'#':>4}  {'resultado':<10} {'cadena':<30} detalle", "-" * 78]
+    for i, r in enumerate(resultados, 1):
+        estado = "ACEPTADA" if r.aceptada else "RECHAZADA"
+        detalle = r.error or ("finales: {" + ", ".join(sorted(r.finales, key=a._orden)) + "}")
+        lineas.append(f"{i:>4}  {estado:<10} {(r.cadena or 'λ'):<30} {detalle}")
+    return "\n".join(lineas) + "\n"

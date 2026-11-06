@@ -15,10 +15,11 @@ import flet as ft
 
 from ui.estado import Estado
 from ui.tema import CLARO, FUENTES, OSCURO, RADIO_CHICO, T, alfa, tema_flet
-from ui.paginas import archivos, ayuda, cadenas, editor, inicio, lenguajes, simulacion
+from ui.paginas import (archivos, ayuda, cadenas, conversiones, editor, inicio, lenguajes, minimizacion,
+                        simulacion)
 
 NOMBRE_APP = "AutómataLab"
-VERSION = "2.0 · Práctica 2"
+VERSION = "3.0 · Práctica 3"
 
 
 @dataclass(frozen=True)
@@ -46,6 +47,10 @@ MODULOS: list[Modulo] = [
            "Autómatas", simulacion.construir, "Validar cadenas paso a paso"),
     Modulo("archivos", "Archivos", ft.Icons.FOLDER_OPEN_OUTLINED, ft.Icons.FOLDER_OPEN_ROUNDED,
            "Autómatas", archivos.construir, "Importar y exportar .jff, .json y .xml"),
+    Modulo("conversiones", "Conversiones", ft.Icons.TRANSFORM_OUTLINED, ft.Icons.TRANSFORM_ROUNDED,
+           "Algoritmos", conversiones.construir, "λ-clausura, eliminación de λ, subconjuntos y AFD → ER"),
+    Modulo("minimizacion", "Minimización", ft.Icons.COMPRESS_OUTLINED, ft.Icons.COMPRESS_ROUNDED,
+           "Algoritmos", minimizacion.construir, "AFD mínimo y equivalencia de autómatas"),
     Modulo("ayuda", "Ayuda", ft.Icons.HELP_OUTLINE_ROUNDED, ft.Icons.HELP_ROUNDED,
            "Soporte", ayuda.construir, "Guía y convenciones"),
 ]
