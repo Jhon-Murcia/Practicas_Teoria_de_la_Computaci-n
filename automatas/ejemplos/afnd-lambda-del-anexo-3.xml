@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<automata tipo="AFND-lambda" nombre="AFND-λ del Anexo 3">
+  <alfabeto>
+    <simbolo>a</simbolo>
+    <simbolo>b</simbolo>
+  </alfabeto>
+  <estados>
+    <estado nombre="q0" inicial="true" x="80.0" y="120.0" />
+    <estado nombre="q1" aceptacion="true" x="240.0" y="120.0" />
+  </estados>
+  <transiciones>
+    <transicion desde="q0" lee="" hacia="q1" />
+    <transicion desde="q0" lee="a" hacia="q1" />
+    <transicion desde="q0" lee="b" hacia="q0" />
+  </transiciones>
+</automata>

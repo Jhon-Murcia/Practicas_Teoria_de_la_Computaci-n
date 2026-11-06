@@ -1,0 +1,76 @@
+{
+  "tipo": "AFD",
+  "nombre": "Binarios múltiplos de 3",
+  "alfabeto": [
+    "0",
+    "1"
+  ],
+  "estados": [
+    "r0",
+    "r1",
+    "r2"
+  ],
+  "inicial": "r0",
+  "aceptacion": [
+    "r0"
+  ],
+  "transiciones": [
+    {
+      "desde": "r0",
+      "lee": "0",
+      "hacia": [
+        "r0"
+      ]
+    },
+    {
+      "desde": "r0",
+      "lee": "1",
+      "hacia": [
+        "r1"
+      ]
+    },
+    {
+      "desde": "r1",
+      "lee": "0",
+      "hacia": [
+        "r2"
+      ]
+    },
+    {
+      "desde": "r1",
+      "lee": "1",
+      "hacia": [
+        "r0"
+      ]
+    },
+    {
+      "desde": "r2",
+      "lee": "0",
+      "hacia": [
+        "r1"
+      ]
+    },
+    {
+      "desde": "r2",
+      "lee": "1",
+      "hacia": [
+        "r2"
+      ]
+    }
+  ],
+  "descripcion": "El estado r_i indica que el prefijo leído, como número binario, deja residuo i al dividir entre 3.",
+  "posiciones": {
+    "r0": [
+      110.0,
+      200.0
+    ],
+    "r1": [
+      330.0,
+      200.0
+    ],
+    "r2": [
+      550.0,
+      200.0
+    ]
+  }
+}

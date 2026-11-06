@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--Created with AutómataLab.-->
+<structure>
+	<type>fa</type>
+	<automaton>
+		<!--Lista de estados.-->
+		<state id="0" name="CLOSED">
+			<x>420.0</x>
+			<y>60.0</y>
+			<initial />
+			<final />
+		</state>
+		<state id="1" name="LISTEN">
+			<x>250.0</x>
+			<y>180.0</y>
+		</state>
+		<state id="2" name="SYN_SENT">
+			<x>600.0</x>
+			<y>180.0</y>
+		</state>
+		<state id="3" name="SYN_RCVD">
+			<x>250.0</x>
+			<y>320.0</y>
+		</state>
+		<state id="4" name="ESTABLISHED">
+			<x>600.0</x>
+			<y>320.0</y>
+		</state>
+		<state id="5" name="FIN_WAIT_1">
+			<x>250.0</x>
+			<y>470.0</y>
+		</state>
+		<state id="6" name="FIN_WAIT_2">
+			<x>250.0</x>
+			<y>620.0</y>
+		</state>
+		<state id="7" name="CLOSING">
+			<x>480.0</x>
+			<y>470.0</y>
+		</state>
+		<state id="8" name="TIME_WAIT">
+			<x>480.0</x>
+			<y>620.0</y>
+		</state>
+		<state id="9" name="CLOSE_WAIT">
+			<x>800.0</x>
+			<y>470.0</y>
+		</state>
+		<state id="10" name="LAST_ACK">
+			<x>800.0</x>
+			<y>620.0</y>
+		</state>
+		<!--Lista de transiciones.-->
+		<transition>
+			<from>0</from>
+			<to>2</to>
+			<read>A</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>1</to>
+			<read>P</read>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>0</to>
+			<read>C</read>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>2</to>
+			<read>E</read>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>3</to>
+			<read>S</read>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>0</to>
+			<read>C</read>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>3</to>
+			<read>S</read>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>4</to>
+			<read>Y</read>
+		</transition>
+		<transition>
+			<from>3</from>
+			<to>5</to>
+			<read>C</read>
+		</transition>
+		<transition>
+			<from>3</from>
+			<to>4</to>
+			<read>K</read>
+		</transition>
+		<transition>
+			<from>3</from>
+			<to>1</to>
+			<read>R</read>
+		</transition>
+		<transition>
+			<from>4</from>
+			<to>5</to>
+			<read>C</read>
+		</transition>
+		<transition>
+			<from>4</from>
+			<to>9</to>
+			<read>F</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>7</to>
+			<read>F</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>6</to>
+			<read>K</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>8</to>
+			<read>X</read>
+		</transition>
+		<transition>
+			<from>6</from>
+			<to>8</to>
+			<read>F</read>
+		</transition>
+		<transition>
+			<from>7</from>
+			<to>8</to>
+			<read>K</read>
+		</transition>
+		<transition>
+			<from>8</from>
+			<to>0</to>
+			<read>T</read>
+		</transition>
+		<transition>
+			<from>9</from>
+			<to>10</to>
+			<read>C</read>
+		</transition>
+		<transition>
+			<from>10</from>
+			<to>0</to>
+			<read>K</read>
+		</transition>
+	</automaton>
+</structure>

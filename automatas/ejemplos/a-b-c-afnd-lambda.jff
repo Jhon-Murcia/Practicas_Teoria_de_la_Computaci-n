@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--Created with AutómataLab.-->
+<structure>
+	<type>fa</type>
+	<automaton>
+		<!--Lista de estados.-->
+		<state id="0" name="p">
+			<x>120.0</x>
+			<y>200.0</y>
+			<initial />
+		</state>
+		<state id="1" name="q">
+			<x>340.0</x>
+			<y>200.0</y>
+		</state>
+		<state id="2" name="r">
+			<x>560.0</x>
+			<y>200.0</y>
+			<final />
+		</state>
+		<!--Lista de transiciones.-->
+		<transition>
+			<from>0</from>
+			<to>1</to>
+			<read />
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>0</to>
+			<read>a</read>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>2</to>
+			<read />
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>1</to>
+			<read>b</read>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>2</to>
+			<read>c</read>
+		</transition>
+	</automaton>
+</structure>

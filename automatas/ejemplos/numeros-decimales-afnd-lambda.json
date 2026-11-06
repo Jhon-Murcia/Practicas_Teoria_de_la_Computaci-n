@@ -1,0 +1,322 @@
+{
+  "tipo": "AFND-lambda",
+  "nombre": "Números decimales",
+  "alfabeto": [
+    "+",
+    "-",
+    ".",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+  ],
+  "estados": [
+    "q0",
+    "q1",
+    "q2",
+    "q3",
+    "q4",
+    "q5"
+  ],
+  "inicial": "q0",
+  "aceptacion": [
+    "q5"
+  ],
+  "transiciones": [
+    {
+      "desde": "q0",
+      "lee": "",
+      "hacia": [
+        "q1"
+      ]
+    },
+    {
+      "desde": "q0",
+      "lee": "+",
+      "hacia": [
+        "q1"
+      ]
+    },
+    {
+      "desde": "q0",
+      "lee": "-",
+      "hacia": [
+        "q1"
+      ]
+    },
+    {
+      "desde": "q1",
+      "lee": ".",
+      "hacia": [
+        "q2"
+      ]
+    },
+    {
+      "desde": "q1",
+      "lee": "0",
+      "hacia": [
+        "q1",
+        "q4"
+      ]
+    },
+    {
+      "desde": "q1",
+      "lee": "1",
+      "hacia": [
+        "q1",
+        "q4"
+      ]
+    },
+    {
+      "desde": "q1",
+      "lee": "2",
+      "hacia": [
+        "q1",
+        "q4"
+      ]
+    },
+    {
+      "desde": "q1",
+      "lee": "3",
+      "hacia": [
+        "q1",
+        "q4"
+      ]
+    },
+    {
+      "desde": "q1",
+      "lee": "4",
+      "hacia": [
+        "q1",
+        "q4"
+      ]
+    },
+    {
+      "desde": "q1",
+      "lee": "5",
+      "hacia": [
+        "q1",
+        "q4"
+      ]
+    },
+    {
+      "desde": "q1",
+      "lee": "6",
+      "hacia": [
+        "q1",
+        "q4"
+      ]
+    },
+    {
+      "desde": "q1",
+      "lee": "7",
+      "hacia": [
+        "q1",
+        "q4"
+      ]
+    },
+    {
+      "desde": "q1",
+      "lee": "8",
+      "hacia": [
+        "q1",
+        "q4"
+      ]
+    },
+    {
+      "desde": "q1",
+      "lee": "9",
+      "hacia": [
+        "q1",
+        "q4"
+      ]
+    },
+    {
+      "desde": "q2",
+      "lee": "0",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q2",
+      "lee": "1",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q2",
+      "lee": "2",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q2",
+      "lee": "3",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q2",
+      "lee": "4",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q2",
+      "lee": "5",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q2",
+      "lee": "6",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q2",
+      "lee": "7",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q2",
+      "lee": "8",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q2",
+      "lee": "9",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q3",
+      "lee": "",
+      "hacia": [
+        "q5"
+      ]
+    },
+    {
+      "desde": "q3",
+      "lee": "0",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q3",
+      "lee": "1",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q3",
+      "lee": "2",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q3",
+      "lee": "3",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q3",
+      "lee": "4",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q3",
+      "lee": "5",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q3",
+      "lee": "6",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q3",
+      "lee": "7",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q3",
+      "lee": "8",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q3",
+      "lee": "9",
+      "hacia": [
+        "q3"
+      ]
+    },
+    {
+      "desde": "q4",
+      "lee": ".",
+      "hacia": [
+        "q3"
+      ]
+    }
+  ],
+  "descripcion": "Signo opcional (λ, + o -), dígitos y un punto decimal con al menos un dígito a un lado.",
+  "posiciones": {
+    "q0": [
+      90.0,
+      200.0
+    ],
+    "q1": [
+      260.0,
+      200.0
+    ],
+    "q2": [
+      430.0,
+      90.0
+    ],
+    "q3": [
+      600.0,
+      200.0
+    ],
+    "q4": [
+      430.0,
+      310.0
+    ],
+    "q5": [
+      770.0,
+      200.0
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<automata tipo="AFD" nombre="Número par de aes">
+  <descripcion>El estado recuerda la paridad del número de aes leídas.</descripcion>
+  <alfabeto>
+    <simbolo>a</simbolo>
+    <simbolo>b</simbolo>
+  </alfabeto>
+  <estados>
+    <estado nombre="par" inicial="true" aceptacion="true" x="140.0" y="200.0" />
+    <estado nombre="impar" x="400.0" y="200.0" />
+  </estados>
+  <transiciones>
+    <transicion desde="par" lee="a" hacia="impar" />
+    <transicion desde="par" lee="b" hacia="par" />
+    <transicion desde="impar" lee="a" hacia="par" />
+    <transicion desde="impar" lee="b" hacia="impar" />
+  </transiciones>
+</automata>
