@@ -1,0 +1,31 @@
+# Entornos virtuales y caches de Python
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+# Salidas que el programa puede volver a generar
+salidas/
+resultados/
+*.salida.txt
+informe_*.txt
+
+# Construcciones de Flet
+build/
+storage/
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+
+# Los archivos .jff NO se excluyen: forman parte del entregable.
