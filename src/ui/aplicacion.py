@@ -8,6 +8,7 @@ lista, sin modificar el resto de la estructura.
 from __future__ import annotations
 
 import platform
+import threading
 from dataclasses import dataclass
 from typing import Any, Callable
 
@@ -15,11 +16,11 @@ import flet as ft
 
 from ui.estado import Estado
 from ui.tema import CLARO, FUENTES, OSCURO, RADIO_CHICO, T, alfa, tema_flet
-from ui.paginas import (archivos, ayuda, cadenas, conversiones, editor, inicio, lenguajes, minimizacion,
-                        simulacion)
+from ui.paginas import (archivos, ayuda, cadenas, conversiones, editor, expresiones, inicio, lenguajes,
+                        minimizacion, simulacion, validadores)
 
 NOMBRE_APP = "AutómataLab"
-VERSION = "3.0 · Práctica 3"
+VERSION = "4.0 · Práctica 4"
 
 
 @dataclass(frozen=True)
@@ -51,6 +52,10 @@ MODULOS: list[Modulo] = [
            "Algoritmos", conversiones.construir, "λ-clausura, eliminación de λ, subconjuntos y AFD → ER"),
     Modulo("minimizacion", "Minimización", ft.Icons.COMPRESS_OUTLINED, ft.Icons.COMPRESS_ROUNDED,
            "Algoritmos", minimizacion.construir, "AFD mínimo y equivalencia de autómatas"),
+    Modulo("expresiones", "Expresiones regulares", ft.Icons.FUNCTIONS_OUTLINED, ft.Icons.FUNCTIONS_ROUNDED,
+           "Expresiones", expresiones.construir, "ER ↔ autómata con Thompson y eliminación de estados"),
+    Modulo("validadores", "Validadores", ft.Icons.VERIFIED_OUTLINED, ft.Icons.VERIFIED_ROUNDED,
+           "Expresiones", validadores.construir, "Correo, teléfono, fecha y URL con autómatas"),
     Modulo("ayuda", "Ayuda", ft.Icons.HELP_OUTLINE_ROUNDED, ft.Icons.HELP_ROUNDED,
            "Soporte", ayuda.construir, "Guía y convenciones"),
 ]
@@ -86,6 +91,10 @@ class Aplicacion:
         self.compacto = self.estado.ancho < 1100
         self._aplicar_tema()
         self.estado.registrar("Sesión iniciada", ft.Icons.PLAY_CIRCLE_OUTLINE)
+        # Los autómatas de los validadores tardan alrededor de un segundo cada uno:
+        # se construyen en segundo plano (quedan en caché) para que la pantalla abra al instante.
+        from algoritmos import validadores as V
+        threading.Thread(target=lambda: [V.construir(k) for k in V.VALIDADORES], daemon=True).start()
         self.reconstruir()
 
     def _aplicar_tema(self) -> None:
