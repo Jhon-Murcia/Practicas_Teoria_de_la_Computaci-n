@@ -104,6 +104,8 @@ def eliminar_estados(a: Automata, orden: Optional[list[str]] = None) -> tuple[ER
         entradas = [p for p in g.estados if p != q and (p, q) in g.aristas]
         salidas = [r for r in g.estados if r != q and (q, r) in g.aristas]
         bucle = estrella(g.r(q, q))
+        texto_bucle = (f"bucle R({q},{q}) = {a_texto(g.r(q, q))}" if (q, q) in g.aristas
+                       else f"sin bucle (R({q},{q}) = ∅ y ∅* = λ)")
         cambios = []
         nuevas = set()
         for p in entradas:
@@ -119,8 +121,7 @@ def eliminar_estados(a: Automata, orden: Optional[list[str]] = None) -> tuple[ER
         pasos.append(Paso(
             f"Se elimina {q}",
             (f"Entradas: {', '.join(entradas) or '—'}; salidas: {', '.join(salidas) or '—'}; "
-             + (f"bucle R({q},{q}) = {a_texto(g.r(q, q))}.\n" if (q, q) in g.aristas
-                else f"sin bucle (R({q},{q}) = ∅ y ∅* = λ).\n"))
+             + f"{texto_bucle}.\n")
             + ("\n".join(cambios) if cambios else "No conecta ningún par de estados: se quita sin agregar aristas."),
             g.foto(posiciones), set(), nuevas, tabla=_tabla(g), tipo="nuevo"))
     resultado = g.r(INICIO, FIN)

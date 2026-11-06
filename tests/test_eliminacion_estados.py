@@ -111,3 +111,9 @@ def test_ida_y_vuelta_con_el_afd_minimo():
     expr, _, _ = eliminar_estados(aut)
     for w in cerradura_kleene(["0", "1"], 7):
         assert pertenece(expr, w) == (len(w) >= 3 and w[-3] == "1")
+
+
+def test_los_pasos_describen_el_bucle_del_estado_eliminado():
+    _, pasos, _ = eliminar_estados(ejemplos.termina_en_ab(), ["q0", "q1", "q2"])
+    assert "bucle R(q0,q0) = a+b" in pasos[1].detalle
+    assert "sin bucle" in pasos[2].detalle
