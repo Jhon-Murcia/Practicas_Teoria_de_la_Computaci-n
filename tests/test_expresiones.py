@@ -138,9 +138,21 @@ def test_minimo_conocido():
 
 @pytest.mark.parametrize("texto", EXPRESIONES)
 def test_ida_y_vuelta_er_automata_er(texto):
+    # ER → AFD mínimo → ER: la expresión obtenida describe el mismo lenguaje.
+    # (Se verifica con derivadas: reconstruir con Thompson una expresión que puede
+    # ser muy larga haría la prueba lenta sin aportar más.)
     res = desde_texto(texto)
     expr, _, _ = eliminar_estados(res.minimo)
-    assert comparar(desde_texto(a_texto(expr) if a_texto(expr) else "∅").minimo, res.minimo).equivalentes
+    original = res.expresion
+    alfabeto = sorted(simbolos(original)) or ["a"]
+    for w in cerradura_kleene(alfabeto, 6):
+        assert pertenece(expr, w) == pertenece(original, w) == acepta(res.minimo, w), (texto, w)
+
+
+def test_ida_y_vuelta_completa_con_equivalencia():
+    res = desde_texto("(a+b)*abb")
+    expr, _, _ = eliminar_estados(res.minimo)
+    assert comparar(desde_texto(a_texto(expr)).minimo, res.minimo).equivalentes
 
 
 @pytest.mark.parametrize("e1,e2,iguales", [
