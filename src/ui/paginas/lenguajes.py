@@ -20,6 +20,7 @@ OPS_LENGUAJES = [
 class PaginaLenguajes:
     def __init__(self, estado: Estado):
         self.estado = estado
+        estado.contexto_ia = self._contexto_ia
         r = estado.recuperar
         self.op = r("leng.op", "kleene")
         self.alfabeto = campo("Alfabeto Σ", r("leng.alfabeto", "a, b"), "Símbolos separados por comas o espacios",
@@ -183,6 +184,15 @@ class PaginaLenguajes:
         await self.estado.guardar("operacion_lenguajes.txt", contenido, ["txt"])
 
     # ------------------------------------------------------------------
+    def _contexto_ia(self) -> str:
+        partes = [f"Operación elegida: {self.op}; alfabeto «{self.alfabeto.value}»; longitud máxima {self._n()}."]
+        if self.descripcion:
+            partes.append(f"Último resultado: {self.descripcion}, {len(self.cadenas)} cadenas.")
+        if self.titulo_ops:
+            partes.append(f"Operación entre lenguajes: {self.titulo_ops} con L1 = {{{self.l1.value}}} y "
+                          f"L2 = {{{self.l2.value}}}: {len(self.cadenas_ops)} cadenas.")
+        return "\n".join(partes)
+
     def vista(self) -> ft.Control:
         cerraduras = tarjeta(
             ft.Column(

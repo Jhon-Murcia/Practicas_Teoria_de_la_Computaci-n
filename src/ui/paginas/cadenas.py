@@ -52,6 +52,7 @@ def _escalera(w: str, modo: str) -> ft.Control:
 class PaginaCadenas:
     def __init__(self, estado: Estado):
         self.estado = estado
+        estado.contexto_ia = self._contexto_ia
         self.entrada = campo("Cadena w", estado.recuperar("cadenas.w", "abba"),
                              "Escriba λ o deje vacío para la cadena vacía", al_cambiar=self._al_cambiar,
                              al_enviar=lambda e: self.calcular(registrar=True), expand=True,
@@ -127,6 +128,11 @@ class PaginaCadenas:
         await self.estado.guardar(nombre, contenido, ["txt"])
 
     # ------------------------------------------------------------------
+    def _contexto_ia(self) -> str:
+        w, pre, suf, sub = self.resultado
+        return (f"Cadena w = {L.mostrar(w)} (longitud {len(w)}). Prefijos: {len(pre)}; sufijos: {len(suf)}; "
+                f"subcadenas distintas: {len(sub)} de un máximo de {L.max_subcadenas_distintas(len(w))}.")
+
     def vista(self) -> ft.Control:
         ejemplos = ft.Row(
             [texto("Ejemplos:", 12.5, T.texto_3)]

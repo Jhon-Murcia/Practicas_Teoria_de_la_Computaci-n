@@ -60,6 +60,18 @@ class Reproductor:
         self._estados_previos: Optional[frozenset[str]] = None
         self._mostrar()
 
+    def descripcion(self) -> str:
+        """El paso actual en texto, para el asistente de IA."""
+        if not self.pasos:
+            return ""
+        paso = self.pasos[self.i]
+        texto = f"Paso {self.i + 1} de {len(self.pasos)}: {paso.titulo}"
+        if paso.detalle:
+            texto += f"\n{paso.detalle}"
+        if paso.tabla:
+            texto += "\nTabla: " + " | ".join("; ".join(map(str, f)) for f in paso.tabla[:15])
+        return texto
+
     def cargar(self, pasos: list[Paso], ir_al_final: bool = False) -> None:
         self.pasos = pasos
         self.i = len(pasos) - 1 if ir_al_final else 0
@@ -105,6 +117,10 @@ class Reproductor:
                 boton_icono(ft.Icons.LAST_PAGE, lambda e: self.ir(n - 1), "Último paso"),
             ], spacing=0, tight=True), border_radius=11, bgcolor=T.superficie_2, border=ft.Border.all(1, T.borde)),
             chip(f"paso {self.i + 1 if n else 0} / {n}", T.primario, mono=True),
+            ft.TextButton("Explicar este paso", icon=ft.Icons.AUTO_AWESOME, disabled=not n,
+                          tooltip="Pedir al asistente de IA que explique el paso actual",
+                          on_click=lambda e: self.estado.preguntar_ia(
+                              "Explícame este paso del algoritmo y por qué ocurre.")),
             ft.Container(ft.ProgressBar(value=(self.i + 1) / n if n else 0, color=T.primario,
                                         bgcolor=T.superficie_3, bar_height=6, border_radius=3), expand=True),
         ], spacing=12, vertical_alignment=ft.CrossAxisAlignment.CENTER)
