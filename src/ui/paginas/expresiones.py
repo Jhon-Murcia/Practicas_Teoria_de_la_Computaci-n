@@ -17,6 +17,7 @@ from formatos import EXTENSIONES, ErrorFormato, cargar, exportar
 from ui.componentes.automatas import acciones_resultado, resumen_automata, selector_automata
 from ui.componentes.comunes import (aviso, boton, campo, chip, pestanas, refrescar, tarjeta, texto, titulo_pagina)
 from ui.componentes.reproductor import Reproductor
+from ia.contexto import describir_automata
 from ui.estado import Estado
 from ui.tema import FUENTE_MONO, RADIO_CHICO, T, alfa
 
@@ -45,6 +46,7 @@ def expresion_destacada(valor: str, color: Optional[str] = None) -> ft.Control:
 class PaginaExpresiones:
     def __init__(self, estado: Estado):
         self.estado = estado
+        estado.contexto_ia = self._contexto_ia
         r = estado.recuperar
         self.modo = r("er.modo", "er_a_automata")
         self.reproductor = Reproductor(estado, vacio="Escriba una expresión y pulse «Construir».")
@@ -353,6 +355,23 @@ class PaginaExpresiones:
                             border=ft.Border.all(1, alfa(color, 0.4)))
 
     # ------------------------------------------------------------------
+    def _contexto_ia(self) -> str:
+        if self.modo == "er_a_automata":
+            texto = f"Expresión escrita: {self.expresion.value}"
+            if (self.clases.value or "").strip():
+                texto += f"\nClases declaradas:\n{self.clases.value}"
+            if self.resultado is not None:
+                texto += (f"\nEtapa mostrada: {self.resultado.etapas[self.etapa].titulo}. Estados por etapa: "
+                          + ", ".join(f"{e.titulo} {len(e.automata.estados)}" for e in self.resultado.etapas))
+                texto += "\n" + self.reproductor.descripcion()
+            return texto
+        if self.modo == "automata_a_er":
+            texto = describir_automata(self.estado.actual)
+            if self.expr_automata is not None:
+                texto += f"\nExpresión obtenida por eliminación de estados: {a_texto(self.expr_automata)}"
+            return texto + "\n" + self.reproductor.descripcion()
+        return f"Comparando las expresiones «{self.e1.value}» y «{self.e2.value}»."
+
     def vista(self) -> ft.Control:
         return ft.Column([
             titulo_pagina("Expresiones regulares",

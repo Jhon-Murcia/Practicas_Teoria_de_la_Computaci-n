@@ -114,7 +114,7 @@ SECCIONES: list[tuple[str, object, str]] = [
         """
 * Notación del curso: `+` unión, yuxtaposición para concatenar, `*` cerradura, `λ` palabra vacía, `∅`
   lenguaje vacío y paréntesis. Precedencia: `*` antes que la concatenación y ésta antes que `+`.
-* `\c` usa el carácter c como símbolo aunque sea un operador: `\+`, `\*`, `\(`, `\)` y `\ ` (espacio).
+* `\\c` usa el carácter c como símbolo aunque sea un operador: `\\+`, `\\*`, `\\(`, `\\)` y `\\ ` (espacio).
   Los espacios sin escapar se ignoran.
 * **Clases**: declare una por línea, `D = [0-9]` o `V = a+e+i+o+u`, y úsela como `{D}`.
 * Si la expresión está mal formada se indica la **posición** del error con una flecha.
@@ -133,6 +133,20 @@ SECCIONES: list[tuple[str, object, str]] = [
   después de minimizar.
 * Toda expresión para correos o URL es una **aproximación** de la norma; la sección *Alcance y límites*
   indica qué casos quedan fuera.
+""",
+    ),
+    (
+        "Asistente de IA y Práctica", ft.Icons.AUTO_AWESOME,
+        """
+* El botón **Asistente IA** (arriba a la derecha) abre un chat que conoce lo que hay en la pantalla: el
+  autómata abierto, el paso del algoritmo, la cadena simulada… Los botones *Explicar este paso* y
+  *¿Por qué?* le envían la pregunta directamente.
+* El asistente **explica, no resuelve ejercicios**: da pistas, no el autómata ni la expresión final.
+  Puede equivocarse; los resultados del programa siempre los calculan los algoritmos.
+* En **Práctica** el sistema califica tus respuestas comparándolas con una respuesta oculta (prueba de
+  equivalencia) y, si fallan, muestra una cadena concreta. La IA puede darte una pista o proponer
+  ejercicios nuevos, que el sistema valida antes de usarlos.
+* Para activar la IA el servidor necesita la variable `ANTHROPIC_API_KEY`.
 """,
     ),
     (
@@ -158,7 +172,7 @@ def construir(estado: Estado) -> ft.Control:
                           "Guía rápida de uso y convenciones matemáticas adoptadas por el software.",
                           ft.Icons.HELP_ROUNDED),
             *tarjetas,
-            texto("La documentación completa de cada práctica está en la carpeta docs/ del repositorio.",
+            texto("La documentación completa del proyecto está en el README del repositorio.",
                   12.5, T.texto_3),
         ],
         spacing=18,

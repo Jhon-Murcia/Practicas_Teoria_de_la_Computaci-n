@@ -15,6 +15,7 @@ from ui.componentes.automatas import acciones_resultado, resumen_automata, selec
 from ui.componentes.comunes import aviso, boton, chip, pestanas, refrescar, tarjeta, texto, titulo_pagina
 from ui.componentes.lienzo import Lienzo
 from ui.componentes.reproductor import Reproductor, tabla_control
+from ia.contexto import describir_automata
 from ui.estado import Estado
 from ui.tema import FUENTE_MONO, T, alfa
 
@@ -22,6 +23,7 @@ from ui.tema import FUENTE_MONO, T, alfa
 class PaginaMinimizacion:
     def __init__(self, estado: Estado):
         self.estado = estado
+        estado.contexto_ia = self._contexto_ia
         if estado.actual is None:
             estado.agregar_automata(ejemplos.multiplos_de_tres())
         self.modo = estado.recuperar("min.modo", "minimizar")
@@ -204,6 +206,12 @@ class PaginaMinimizacion:
         ]
 
     # ------------------------------------------------------------------
+    def _contexto_ia(self) -> str:
+        if self.modo == "equivalencia" and 0 <= self.indice_b < len(self.estado.automatas):
+            return ("Comparando la equivalencia de dos autómatas.\nAutómata 1:\n" + describir_automata(self.a)
+                    + "\nAutómata 2:\n" + describir_automata(self.estado.automatas[self.indice_b]))
+        return f"Minimización.\n{describir_automata(self.a)}\n{self.reproductor.descripcion()}"
+
     def vista(self) -> ft.Control:
         return ft.Column([
             titulo_pagina("Minimización y equivalencia",

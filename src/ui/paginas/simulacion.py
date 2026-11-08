@@ -15,6 +15,7 @@ from core.simulacion import (Arbol, Nodo, Resultado, arbol_computacion, informe_
 from ui.componentes.comunes import (aviso, boton, boton_icono, campo, chip, pestanas, refrescar, tarjeta, texto,
                                     titulo_pagina)
 from ui.componentes.lienzo import Lienzo
+from ia.contexto import describir_automata
 from ui.estado import Estado
 from ui.tema import FUENTE_MONO, RADIO_CHICO, T, alfa
 
@@ -26,6 +27,7 @@ def conjunto(estados, a: Automata) -> str:
 class PaginaSimulacion:
     def __init__(self, estado: Estado):
         self.estado = estado
+        estado.contexto_ia = self._contexto_ia
         if estado.actual is None:
             estado.agregar_automata(ejemplos.termina_en_ab())
         self.pestana = estado.recuperar("sim.pestana", "traza")
@@ -200,7 +202,12 @@ class PaginaSimulacion:
                                 size=30),
                         ft.Column([texto("CADENA ACEPTADA" if ok else "CADENA RECHAZADA", 16,
                                          T.exito if ok else T.error, peso=ft.FontWeight.W_800),
-                                   texto(r.explicacion(self.a), 12.5, T.texto_2)], spacing=2, expand=True)],
+                                   texto(r.explicacion(self.a), 12.5, T.texto_2)], spacing=2, expand=True),
+                        ft.TextButton("¿Por qué?", icon=ft.Icons.AUTO_AWESOME,
+                                      tooltip="Pedir al asistente de IA que explique el resultado",
+                                      on_click=lambda e: self.estado.preguntar_ia(
+                                          "¿Por qué esta cadena se " + ("aceptó" if ok else "rechazó")
+                                          + "? Explícalo recorriendo los estados."))],
                        spacing=12),
                 padding=16, border_radius=12, bgcolor=alfa(T.exito if ok else T.error, 0.1),
                 border=ft.Border.all(1, alfa(T.exito if ok else T.error, 0.4)),
@@ -375,6 +382,19 @@ class PaginaSimulacion:
         await self.estado.guardar("informe_validacion.txt", informe_lote(self.a, self.lote, self.origen_lote), ["txt"])
 
     # ------------------------------------------------------------------
+    def _contexto_ia(self) -> str:
+        r = self.resultado
+        partes = [describir_automata(self.a)]
+        if r is not None:
+            partes.append(f"Cadena simulada: «{r.cadena or 'λ'}». Resultado: "
+                          + ("aceptada" if r.aceptada else "rechazada") + f". {r.explicacion(self.a)}")
+            partes.append(f"Paso mostrado: {self.k} de {len(r.pasos)}.")
+            if self.k:
+                p = r.pasos[self.k - 1]
+                partes.append(f"En ese paso se lee «{p.simbolo}»: activos antes {conjunto(p.antes, self.a)}, "
+                              f"después de la λ-clausura {conjunto(p.despues, self.a)}.")
+        return "\n".join(partes)
+
     def vista(self) -> ft.Control:
         entrada = tarjeta(ft.Column([
             ft.Row([self.selector, self.entrada], spacing=12, vertical_alignment=ft.CrossAxisAlignment.START),

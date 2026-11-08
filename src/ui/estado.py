@@ -16,6 +16,8 @@ from typing import Any, Callable, Optional
 import flet as ft
 
 from core.automata import Automata
+from ia.contexto import describir_automata
+from ia.conversacion import Conversacion
 from ui.tema import T
 
 
@@ -41,6 +43,25 @@ class Estado:
     indice: int = -1
     teclado: Optional[Callable[[Any], None]] = None
     ancho: float = 1440.0
+    # Asistente de IA: la conversación sobrevive a la navegación; cada pantalla
+    # registra en ``contexto_ia`` una función que describe lo que se ve.
+    conversacion: Conversacion = field(default_factory=Conversacion)
+    contexto_ia: Optional[Callable[[], str]] = None
+    preguntar_ia: Callable[[str], None] = lambda pregunta: None
+    modulo_actual: str = "inicio"
+
+    def describir_pantalla(self) -> str:
+        """Texto que se envía al asistente junto con cada pregunta."""
+        partes = [f"Sección abierta: {self.modulo_actual}."]
+        try:
+            extra = self.contexto_ia() if self.contexto_ia else ""
+        except Exception:
+            extra = ""
+        if extra:
+            partes.append(extra)
+        elif self.actual is not None:
+            partes.append(describir_automata(self.actual))
+        return "\n".join(partes)
 
     # ------------------------------------------------------------------
     # Biblioteca de autómatas de la sesión

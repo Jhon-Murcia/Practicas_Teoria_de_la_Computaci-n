@@ -1,181 +1,407 @@
-# AutómataLab — Software interactivo de Teoría de la Computación
+<!-- Portada: nombre, boleta, grupo, carrera, unidad de aprendizaje, profesor y fechas. -->
+
+# AutómataLab
 
 ![pruebas](https://github.com/Jhon-Murcia/Practicas_Teoria_de_la_Computaci-n/actions/workflows/pruebas.yml/badge.svg)
 
-| | |
-|---|---|
-| **Institución** | Instituto Politécnico Nacional — Escuela Superior de Cómputo |
-| **Unidad de aprendizaje** | Teoría de la Computación |
-| **Carrera** | Ingeniería en Sistemas Computacionales (Plan 2020) |
-| **Nombre completo** | _(escriba su nombre)_ |
-| **Número de boleta** | _(escriba su boleta)_ |
-| **Grupo** | _(escriba su grupo)_ |
-| **Profesor** | _(escriba el nombre del profesor)_ |
-| **Fechas de entrega** | Práctica 1: martes 22 de septiembre de 2026 · Práctica 2: martes 6 de octubre de 2026 · Práctica 3: miércoles 4 de noviembre de 2026 (etiqueta `practica3`) · Práctica 4: viernes 6 de noviembre de 2026 (etiqueta `practica4`) |
+AutómataLab es una aplicación para estudiar los temas de Teoría de la Computación: cadenas,
+lenguajes, autómatas finitos y expresiones regulares. Está hecha en **Python con Flet** y se fue
+construyendo práctica por práctica sobre el mismo programa. Se puede usar como aplicación de
+escritorio, en el navegador desde un contenedor de Docker o desplegada en Render.
 
-Un único software, construido de forma acumulativa a lo largo de las prácticas, para estudiar
-cadenas, lenguajes y autómatas finitos con una interfaz gráfica en **Python + Flet**.
+Este README es la documentación del proyecto.
 
-![Editor de autómatas](evidencias/practica2/app/01-editor-tcp.png)
+## Contenido
 
-## Índice
+1. [Cómo ejecutarlo](#cómo-ejecutarlo)
+2. [Qué hace el programa](#qué-hace-el-programa)
+3. [Práctica 1: cadenas y lenguajes](#práctica-1-cadenas-y-lenguajes)
+4. [Práctica 2: autómatas, simulación y archivos](#práctica-2-autómatas-simulación-y-archivos)
+5. [Práctica 3: conversiones y minimización](#práctica-3-conversiones-y-minimización)
+6. [Práctica 4: expresiones regulares y validadores](#práctica-4-expresiones-regulares-y-validadores)
+7. [Asistente de IA y sección de práctica](#asistente-de-ia-y-sección-de-práctica)
+8. [Despliegue en Render](#despliegue-en-render)
+9. [Entorno: Docker y tres versiones de Python](#entorno-docker-y-tres-versiones-de-python)
+10. [Pruebas](#pruebas)
+11. [Estructura del proyecto](#estructura-del-proyecto)
+12. [Referencias](#referencias)
 
-### Práctica 1 — Operaciones básicas sobre lenguajes
+---
 
-| Documento | Contenido |
-|---|---|
-| [01-entorno.md](docs/practica1/01-entorno.md) | Repositorio, Docker, tres versiones de Python |
-| [02-investigacion.md](docs/practica1/02-investigacion.md) | Investigación (a cargo del alumno) |
-| [03-estado-del-arte.md](docs/practica1/03-estado-del-arte.md) | Cinco artículos (a cargo del alumno) |
-| [04-jflap.md](docs/practica1/04-jflap.md) | Autómatas en JFLAP |
-| [05-aplicacion.md](docs/practica1/05-aplicacion.md) | Aplicación, convenciones, pruebas y resultados |
-| [conclusiones.md](docs/practica1/conclusiones.md) | Conclusiones |
-| [bibliografia.md](docs/practica1/bibliografia.md) | Bibliografía |
+## Cómo ejecutarlo
 
-### Práctica 2 — AFND, simulación e importación/exportación
+### En la computadora
 
-| Documento | Contenido |
-|---|---|
-| [01-entorno.md](docs/practica2/01-entorno.md) | Reutilización del entorno, flujo de ramas e integración continua |
-| [02-jflap.md](docs/practica2/02-jflap.md) | AFND y AFND-λ en JFLAP (a cargo del alumno) |
-| [03-simulador.md](docs/practica2/03-simulador.md) | Simulador: arquitectura, formatos, decisión de diseño, pruebas |
-| [04-investigacion.md](docs/practica2/04-investigacion.md) | Investigación y estado del arte (a cargo del alumno) |
-| [05-del-articulo-al-automata.md](docs/practica2/05-del-articulo-al-automata.md) | Autómata de aplicación: conexión TCP |
-| [propuesta.md](docs/practica2/propuesta.md) | Propuesta de trabajo (opcional) |
-| [bibliografia.md](docs/practica2/bibliografia.md) | Bibliografía |
+Desde la carpeta del proyecto (la que tiene `src/`):
 
-> `src/core/lenguajes.py` y sus pruebas **proceden de la Práctica 1** (rama
-> [`practica1`](https://github.com/Jhon-Murcia/Practicas_Teoria_de_la_Computaci-n/tree/practica1)) y se reutilizan sin reescribirse.
-
-### Práctica 3 — Conversiones, λ-clausura y minimización (etiqueta `practica3`)
-
-| Documento | Contenido |
-|---|---|
-| [01-afd-a-er-jflap.md](docs/practica3/01-afd-a-er-jflap.md) | AFD → ER con JFLAP (a cargo del alumno) y apoyo del software |
-| [02-software.md](docs/practica3/02-software.md) | Extensión del software, pruebas y capturas |
-| [03-algoritmos.md](docs/practica3/03-algoritmos.md) | Cada algoritmo: teoría, pseudocódigo, ejemplo a mano vs. software, coste |
-
-Uso de las funciones nuevas: *Conversiones* (λ-clausura, eliminar λ, subconjuntos, autómata → ER,
-cadena completa), *Minimización* (AFD mínimo, tabla de pares, equivalencia) y *Simulación → Varias
-cadenas* (cargar un `.txt` y guardar el informe). Todos los algoritmos se ven paso a paso.
-
-### Práctica 4 — Expresiones regulares (etiqueta `practica4`)
-
-| Documento | Contenido |
-|---|---|
-| [01-investigacion.md](docs/practica4/01-investigacion.md) | Investigación (a cargo del alumno) |
-| [02-er-a-automata.md](docs/practica4/02-er-a-automata.md) | Analizador, notación, Thompson y cadena hasta el AFD mínimo |
-| [03-automata-a-er.md](docs/practica4/03-automata-a-er.md) | Verificación de determinismo, eliminación de estados y comparación con JFLAP |
-| [04-validadores.md](docs/practica4/04-validadores.md) | Correo, teléfono, fecha y URL; congruencia con `re.fullmatch` |
-
-**Notación aceptada por el analizador** (detalle en [02-er-a-automata.md](docs/practica4/02-er-a-automata.md)):
-`+` unión · yuxtaposición = concatenación · `*` cerradura · `λ` (o `ε`) palabra vacía · `∅` lenguaje
-vacío · `( )` agrupan. Precedencia: `*` > concatenación > `+`. `\c` usa el carácter c como símbolo
-(`\+`, `\*`, `\(`, `\)`, `\ `). Clases: se declaran como `D = [0-9]` y se usan como `{D}`.
-Una expresión mal formada se rechaza indicando la posición del error.
-
-Uso de las funciones nuevas: *Expresiones regulares* → **ER → Autómata** (árbol sintáctico, Thompson
-paso a paso, cada etapa exportable a `.jff`, validación de cadenas), **Autómata → ER** (importar `.jff`,
-verificar determinismo, eliminación de estados, comparar con la expresión de JFLAP) y **Comparar
-expresiones**; *Validadores* (escribir un texto y ver si es válido, con su AFD).
-
-## Funcionalidades
-
-| Módulo | Práctica | Qué hace |
-|---|---|---|
-| Inicio | 1 | Panel con indicadores, accesos rápidos y actividad reciente |
-| Cadenas | 1 | Prefijos, sufijos y subcadenas; conteos y exportación a `.txt` |
-| Lenguajes | 1 | Σ*, Σ⁺ y Σⁿ con límite de 200 000 cadenas; operaciones entre lenguajes finitos |
-| Editor | 2 | Editor visual (estados, transiciones, λ, zoom, arrastre), definición formal, tabla δ editable, deshacer/rehacer, diagnóstico de determinismo |
-| Simulación | 2-3 | Validación paso a paso con cinta, λ-clausura, traza, árbol de caminos y validación de un `.txt` con informe |
-| Archivos | 2 | Importar/exportar `.jff`, `.json`, `.xml`; proyectos con varios autómatas |
-| Conversiones | 3 | λ-clausura, eliminación de λ, subconjuntos (sólo alcanzables), autómata → ER, cadena completa, paso a paso |
-| Minimización | 3 | Inaccesibles, refinamiento de particiones, tabla de pares, equivalencia con contraejemplo |
-| Expresiones regulares | 4 | Analizador con errores por posición, Thompson paso a paso, ER → AFD mínimo, autómata → ER, equivalencia de expresiones |
-| Validadores | 4 | Correo, teléfono, fecha y URL con su AFD mínimo y su traducción a `re` |
-| Ayuda | 1-4 | Convenciones matemáticas y guía de uso |
-
-Tema oscuro (predeterminado) y claro; el menú lateral se compacta en pantallas estrechas.
-
-## Estructura del repositorio
-
-```
-README.md  .gitignore  .gitattributes  requirements.txt  pytest.ini
-.github/workflows/pruebas.yml   integración continua (3.11, 3.12, 3.13)
-entorno/Dockerfile  entorno/compose.yml
-src/
-  app.py                 punto de entrada
-  core/                  núcleo sin Flet: lenguajes, autómata, simulación, ejemplos
-  formatos/              lectura y escritura de .jff, .json y .xml
-  algoritmos/            λ-clausura, eliminación de λ, subconjuntos, minimización, equivalencia,
-                         AFD → ER, Thompson, cadena ER → AFD mínimo, validadores
-  ui/                    interfaz (tema, estado, componentes, páginas)
-  assets/fonts/          tipografías incluidas (SIL OFL)
-tests/                   pruebas con pytest
-docs/practicaN/          reporte de cada práctica
-automatas/               ejemplos/, aplicacion/ y practica3/ (casos de prueba)
-herramientas/            utilidades (exportar los ejemplos)
-evidencias/practicaN/    git/ ci/ docker/ jflap/ app/
+```powershell
+py -3.12 -m venv venv
+.\venv\Scripts\activate
+pip install -r requirements.txt
+python src/app.py
 ```
 
-## Cómo ejecutar
+En macOS o Linux se usa `python3 -m venv venv` y `source venv/bin/activate`.
 
-### Con contenedores (Docker Desktop)
+Si se quiere abrir en el navegador en vez de una ventana:
+
+```powershell
+$env:FLET_FORCE_WEB_SERVER = "true"
+$env:FLET_SERVER_PORT = "8550"
+python src/app.py
+```
+
+y luego se abre http://localhost:8550.
+
+### Con Docker
 
 Desde la carpeta `entorno/`:
 
 ```bash
-docker compose build                              # construye las tres imágenes
-docker compose run --rm py311 python --version    # Python 3.11.x
-docker compose run --rm py312 python --version    # Python 3.12.x
-docker compose run --rm py313 python --version    # Python 3.13.x
-docker compose run --rm py311 pytest -q           # pruebas en cada versión
+docker compose build
+docker compose up py312        # la aplicación queda en http://localhost:8550
+docker compose down            # para apagarla
+```
+
+### Para usar el asistente de IA
+
+El asistente necesita una clave de la API de Claude. Se pone en una variable de entorno antes de
+arrancar el programa:
+
+```powershell
+$env:ANTHROPIC_API_KEY = "sk-ant-..."
+```
+
+Sin la clave todo el programa funciona igual, sólo que el asistente aparece desactivado.
+
+---
+
+## Qué hace el programa
+
+El menú de la izquierda tiene estas secciones:
+
+| Sección | Para qué sirve |
+|---|---|
+| Inicio | Resumen de la sesión y accesos rápidos |
+| Cadenas | Prefijos, sufijos y subcadenas de una cadena |
+| Lenguajes | Σ*, Σ⁺ y Σⁿ, y operaciones entre lenguajes finitos |
+| Editor | Dibujar y editar autómatas (AFD, AFND y AFND-λ) |
+| Simulación | Probar cadenas paso a paso |
+| Archivos | Abrir y guardar autómatas en `.jff`, `.json` y `.xml` |
+| Conversiones | λ-clausura, quitar transiciones λ, construcción de subconjuntos y autómata → expresión regular |
+| Minimización | AFD mínimo y comparar si dos autómatas son equivalentes |
+| Expresiones regulares | De expresión regular a autómata y al revés |
+| Validadores | Correo, teléfono, fecha y URL validados con autómatas |
+| Práctica | Ejercicios que el sistema califica, con pistas de la IA |
+| Ayuda | Guía rápida y convenciones |
+
+En todas las secciones está el botón **Asistente IA** arriba a la derecha. Hay tema oscuro y claro.
+
+---
+
+## Práctica 1: cadenas y lenguajes
+
+**Cadenas.** Para una cadena *w* se calculan todos sus prefijos, sufijos y subcadenas, y se pueden
+guardar en un archivo de texto. La cadena vacía se escribe λ.
+
+Se tomó la convención de que λ y la propia *w* sí cuentan como prefijo y como sufijo, porque
+*w* = λ*w* = *w*λ. Por eso una cadena de longitud *n* tiene **n + 1 prefijos** y **n + 1 sufijos**.
+Las subcadenas distintas son como máximo **n(n + 1)/2 + 1** (contando λ): hay *n − k + 1* posiciones
+para cada longitud *k*. Ese máximo sólo se alcanza cuando todos los símbolos son diferentes; por
+ejemplo `abcd` tiene 11 y `abba` sólo 9.
+
+**Lenguajes.** Se generan Σ*, Σ⁺ y Σⁿ hasta una longitud que elige el usuario. Σ⁰ = {λ}, porque la
+única cadena de longitud 0 es la vacía, y por eso Σ* − Σ⁺ = {λ}. Como Σ* es infinito, el programa sólo
+muestra las cadenas hasta la longitud máxima. El número de cadenas es 1 + |Σ| + |Σ|² + … + |Σ|ⁿ y crece
+muy rápido; antes de generarlas el programa hace la cuenta con esa fórmula y **rechaza** cualquier caso
+de más de 200 000 cadenas. Por ejemplo, con Σ = {0, 1} y longitud 16 salen 131 071 (se acepta), pero
+con longitud 17 saldrían 262 143 (se rechaza).
+
+También hay concatenación, unión, intersección, diferencia, potencia y reflexión de lenguajes finitos.
+
+---
+
+## Práctica 2: autómatas, simulación y archivos
+
+**Editor.** Los estados y transiciones se dibujan con el mouse: herramienta *Estado* para crear,
+*Transición* para unir dos estados (se escriben los símbolos y hay un botón para insertar λ),
+*Eliminar* y *Mover*. La rueda del mouse hace zoom. A la derecha hay tres pestañas: propiedades del
+elemento seleccionado, la definición formal (Q, Σ, q0, F) y la tabla δ, que también se puede editar.
+
+El programa decide solo el tipo: es **AFD** si cada pareja (estado, símbolo) tiene a lo mucho un
+destino y no hay λ; **AFND** si alguna tiene varios destinos; **AFND-λ** si hay transiciones λ. Si no es
+determinista, dice qué estado y qué símbolo lo impiden.
+
+**Simulación.** Para los no deterministas se simulan **todos los caminos a la vez**: en cada paso se
+guarda el conjunto de estados activos y se le aplica la λ-clausura. Se eligió así en lugar de convertir
+primero a AFD porque la conversión puede producir hasta 2ⁿ estados, mientras que simular directo cuesta
+del orden de |w|·|Q|² y deja ver en cada paso qué pasa con la λ-clausura. Un AFD es el caso en el que
+ese conjunto tiene un solo estado. La pantalla muestra la cinta, el paso actual, la traza completa y un
+**árbol de caminos** con todas las ramas de un AFND.
+
+**Archivos.** Se leen y escriben `.jff` (JFLAP), `.json` y `.xml`. En los tres formatos la transición λ
+se escribe con el símbolo vacío: `<read/>` en JFLAP, `"lee": ""` en JSON y `lee=""` en XML. JFLAP no
+guarda el alfabeto, así que al abrir un `.jff` se deduce de las transiciones. Exportar e importar dan
+exactamente el mismo archivo. También se puede guardar un proyecto con todos los autómatas de la sesión.
+
+**Autómata de aplicación: una conexión TCP.** Se modeló el ciclo de vida de una conexión TCP según el
+diagrama de estados del RFC 793. Cada símbolo es un evento y una cadena se acepta si la conexión vuelve
+a quedar cerrada.
+
+| Símbolo | Evento | Símbolo | Evento |
+|---|---|---|---|
+| P | abrir en modo pasivo | K | llega ACK |
+| A | abrir en modo activo (se manda SYN) | F | llega FIN |
+| E | enviar datos desde LISTEN | X | llega FIN+ACK |
+| S | llega SYN | R | llega RST |
+| Y | llega SYN+ACK | C | la aplicación cierra |
+| T | se vence el temporizador 2·MSL | | |
+
+Q = {CLOSED, LISTEN, SYN_SENT, SYN_RCVD, ESTABLISHED, FIN_WAIT_1, FIN_WAIT_2, CLOSING, TIME_WAIT,
+CLOSE_WAIT, LAST_ACK}, q0 = CLOSED y F = {CLOSED}. Es un AFD con δ parcial: un evento sin transición hace
+que la secuencia se rechace. Algunas pruebas:
+
+| Cadena | Resultado | Recorrido |
+|---|---|---|
+| `PSKFCK` | acepta | CLOSED → LISTEN → SYN_RCVD → ESTABLISHED → CLOSE_WAIT → LAST_ACK → CLOSED |
+| `AYCKFT` | acepta | CLOSED → SYN_SENT → ESTABLISHED → FIN_WAIT_1 → FIN_WAIT_2 → TIME_WAIT → CLOSED |
+| `AYCXT` | acepta | … → FIN_WAIT_1 → TIME_WAIT → CLOSED |
+| `PSK` | rechaza | se queda en ESTABLISHED |
+| `K` | rechaza | no hay transición desde CLOSED |
+
+El autómata está en `automatas/aplicacion/` y en *Editor → Ejemplos*.
+
+---
+
+## Práctica 3: conversiones y minimización
+
+Todos los algoritmos están programados en Python sin bibliotecas de autómatas, y se ven **paso a paso**
+sobre el diagrama: se puede avanzar, regresar o reproducir los pasos.
+
+| Algoritmo | Idea | Costo aproximado |
+|---|---|---|
+| λ-clausura | Estados a los que se llega desde q usando sólo λ (recorrido con una pila) | O(\|Q\| + transiciones λ) por estado |
+| Quitar λ | δ'(q, a) = λ-clausura(δ(λ-clausura(q), a)); pasan a ser finales los estados cuya clausura toca F | O(\|Q\|³·\|Σ\|) |
+| Subconjuntos | Cada estado del AFD es un conjunto de estados del AFN; **sólo se generan los alcanzables** desde λ-clausura(q0). ∅ es el estado de error | hasta 2^\|Q\| subconjuntos |
+| Minimización | Se quitan los inaccesibles, se completa δ con un estado sumidero si falta y se refina la partición {F, Q − F} hasta que ya no cambia. También está la tabla de pares distinguibles | O(\|Q\|²·\|Σ\|) |
+| Equivalencia | Dos AFD son equivalentes si sus AFD mínimos son iguales salvo el nombre de los estados; si no, se muestra la cadena más corta en la que difieren | |
+| Autómata → ER | Eliminación de estados: se agregan un inicio I y un final F, y al quitar q se hace R(p,r) = R(p,r) + R(p,q)R(q,q)*R(q,r) | O(\|Q\|³) operaciones |
+
+Ejemplo: con el AFND que acepta las cadenas que terminan en `ab`, la construcción de subconjuntos genera
+sólo 3 de los 8 posibles ({q0}, {q0,q1} y {q0,q2}) y la eliminación de estados da `(a+b)*ab`. En cambio,
+con «el tercer símbolo desde el final es 1» se generan los 8: esa familia sí llega a la cota 2ⁿ.
+
+En *Simulación → Varias cadenas* se puede cargar un `.txt` con una cadena por línea, validarlas todas y
+guardar un informe.
+
+---
+
+## Práctica 4: expresiones regulares y validadores
+
+**Notación que acepta el analizador.**
+
+| Qué | Cómo se escribe |
+|---|---|
+| Unión | `+` |
+| Concatenación | poner una cosa junto a la otra: `ab` |
+| Cerradura de Kleene | `*` |
+| Palabra vacía / lenguaje vacío | `λ` / `∅` |
+| Agrupar | `( )` |
+| Usar un operador como símbolo | `\+`, `\*`, `\(`, `\)`, `\ ` (espacio) |
+| Clase de símbolos | se declara `D = [0-9]` y se usa como `{D}` |
+
+La precedencia es `*`, luego la concatenación y al final `+`. Si la expresión está mal escrita, el
+programa dice en qué posición está el error y la marca con una flecha. Ojo: en el módulo `re` de Python
+el `+` significa «una o más veces» y la unión es `|`; no hay que confundir las dos notaciones.
+
+**De expresión a autómata.** Se muestra el árbol sintáctico y luego la construcción de Thompson paso a
+paso (casos básicos, unión, concatenación y cerradura). Después se reutilizan los algoritmos de la
+Práctica 3 hasta llegar al AFD mínimo, y cada etapa se puede exportar a `.jff`. Por ejemplo, `(a+b)*abb`
+da un AFN-λ de 14 estados, un AFD de 5 y un AFD mínimo de 4.
+
+**De autómata a expresión.** Se abre un `.jff`, el programa revisa si es determinista (si no, dice el
+estado y el símbolo que fallan) y aplica la eliminación de estados. La expresión que dio JFLAP se puede
+escribir para compararla: las dos se convierten en AFD mínimos y se revisa si son equivalentes.
+
+**Validadores.** Cada uno está escrito en la notación del curso y se valida con su AFD mínimo:
+
+| Validador | AFD antes de minimizar | AFD mínimo | Norma consultada |
+|---|---|---|---|
+| Correo electrónico | 19 | 9 | RFC 5322 (dot-atom) |
+| Teléfono de México (10 dígitos) | 54 | 26 | marcación nacional del IFT |
+| Fecha (DD/MM/AAAA y AAAA-MM-DD) | 74 | 26 | ISO 8601 |
+| URL (http y https) | 22 | 15 | RFC 3986 |
+
+Ninguna expresión cubre toda la norma. Por ejemplo, el correo no acepta partes locales entre comillas,
+la fecha acepta 31/02/2026 porque no revisa los días de cada mes y la URL no acepta la consulta `?…`.
+La pantalla muestra todos los límites de cada uno, la expresión en la notación del curso y su versión
+en `re` de Python.
+
+Para comprobar que el autómata y `re.fullmatch` coinciden, las pruebas generan **600 cadenas por
+validador**: 40 % sacadas al azar del lenguaje, 40 % que son esas mismas cadenas con un cambio pequeño
+(insertar, borrar, cambiar o duplicar un carácter) y 20 % aleatorias. En todas coinciden.
+
+---
+
+## Asistente de IA y sección de práctica
+
+### Asistente
+
+Se abre con el botón **Asistente IA**. Cada sección le pasa al asistente lo que hay en la pantalla (el
+autómata abierto, el paso del algoritmo, la cadena que se simuló, etc.), así que se le puede preguntar
+cosas como «¿por qué se rechazó esta cadena?» o «explícame este paso». Además hay botones
+**Explicar este paso** en los algoritmos y **¿Por qué?** en la simulación y en los validadores.
+
+El asistente **explica, pero no resuelve ejercicios**: no da el autómata completo ni la expresión final
+de un ejercicio; da pistas y preguntas que ayuden a pensarlo. Esa regla está en sus instrucciones. Como
+todo modelo de lenguaje, se puede equivocar, por eso los resultados del programa (simulación,
+equivalencia, evaluación) siempre los calculan los algoritmos y no la IA.
+
+Usa el modelo **Claude** de Anthropic mediante su SDK oficial (`anthropic`). La clave se lee del servidor y
+nunca llega al navegador. Se configura con variables de entorno:
+
+| Variable | Para qué | Valor por omisión |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | Clave de la API | (ninguno: sin ella la IA queda apagada) |
+| `IA_MODELO` | Modelo que se usa | `claude-opus-5-5` |
+| `IA_LIMITE_SESION` | Consultas por sesión del navegador | `40` |
+
+Si se quiere gastar menos se puede poner `IA_MODELO=claude-haiku-5-5`, que es bastante más barato. El
+límite por sesión existe para que, si la página queda pública, nadie gaste la clave sin control.
+
+### Práctica
+
+- **Ejercicios.** Hay 13 ejercicios propios (construir un AFD, un AFND o un AFND-λ, o escribir una
+  expresión regular). La respuesta la califica **el sistema, no la IA**: se compara con una respuesta de
+  referencia oculta usando la prueba de equivalencia de AFD mínimos. Si está mal, se muestra una cadena
+  concreta en la que falla. Para los autómatas, se dibujan en el Editor y se eligen en Práctica.
+- **Pistas.** Si la respuesta está mal se puede pedir una pista a la IA. A la IA se le manda el
+  enunciado, el intento y la cadena que falla, pero nunca la respuesta de referencia.
+- **Ejercicios nuevos con IA.** La IA propone un enunciado y una expresión de referencia. Antes de
+  usarlo, el sistema revisa que la expresión esté bien escrita, use sólo el alfabeto y no describa el
+  lenguaje vacío. Se avisa que el enunciado lo escribió la IA y podría no coincidir del todo.
+- **Preguntas rápidas.** Se muestra un autómata y una cadena y hay que decir si la acepta.
+
+---
+
+## Despliegue en Render
+
+El repositorio ya tiene todo lo necesario: `render.yaml` y el Dockerfile de `entorno/`. La aplicación
+lee el puerto de la variable `PORT` que pone Render.
+
+1. Entrar a https://render.com con la cuenta de GitHub.
+2. **New → Blueprint** y elegir este repositorio. Render lee `render.yaml` y crea el servicio web.
+3. Cuando lo pida, escribir el valor de `ANTHROPIC_API_KEY` (también se puede cambiar después en
+   *Environment*).
+4. Esperar a que termine el build y abrir la dirección `https://….onrender.com` que da Render.
+
+Cosas a tener en cuenta:
+
+- En el plan gratuito el servicio se apaga si nadie lo usa un rato y la primera visita tarda en cargar.
+- Los autómatas de cada persona viven en su sesión del navegador; si se recarga la página se pierden,
+  así que conviene usar *Archivos → Guardar proyecto*.
+- Cada consulta a la IA cuesta según el modelo. Con la página pública conviene dejar un límite por
+  sesión bajo o usar `claude-haiku-5-5`.
+
+---
+
+## Entorno: Docker y tres versiones de Python
+
+Hay un solo `entorno/Dockerfile` que recibe la versión de Python como argumento (`ARG PYTHON_VERSION`) y
+crea un entorno virtual en `/opt/venv`, fuera de `/app`, porque el volumen de Compose reemplaza `/app`.
+`entorno/compose.yml` define tres servicios:
+
+| Servicio | Imagen | Por qué |
+|---|---|---|
+| py311 | python:3.11-slim | La versión más antigua que sigue con soporte y que acepta Flet 0.86.5 (pide Python ≥ 3.10) |
+| py312 | python:3.12-slim | La versión del curso; es la que sirve la interfaz en el puerto 8550 |
+| py313 | python:3.13-slim | Una versión reciente, para ver que nada dependa de algo que haya cambiado |
+
+```bash
+docker compose run --rm py311 pytest -q
 docker compose run --rm py312 pytest -q
 docker compose run --rm py313 pytest -q
-docker compose up py312                           # interfaz en http://localhost:8550
-docker compose down                               # apaga y limpia
 ```
 
-Si usa Podman, los comandos son los mismos sustituyendo `docker` por `podman`.
+Dos cosas que pasaron y vale la pena anotar:
 
-### En su equipo
+- **FastAPI fijada en 0.144.0.** Con la última versión de FastAPI el servidor web de `flet-web 0.86.5` no
+  arrancaba, porque FastAPI quitó el argumento `openapi_prefix` desde la 0.145.0. Por eso
+  `requirements.txt` tiene todas las versiones fijas.
+- **Una diferencia entre versiones de Python.** Una secuencia de escape inválida en el código pasaba sin
+  aviso en 3.11, pero en 3.12 y 3.13 salía un `SyntaxWarning`. Se corrigió y ahora una prueba compila
+  todo el código tratando esos avisos como error.
+
+También hay integración continua con GitHub Actions (`.github/workflows/pruebas.yml`), que corre las
+pruebas con las tres versiones en cada push y Pull Request.
+
+Cada práctica se trabajó en su propia rama (`practica1` a `practica4`) y entró a `main` por Pull
+Request. Las Prácticas 3 y 4 tienen las etiquetas `practica3` y `practica4`. Como las ramas se llaman
+igual que las etiquetas, para subir una etiqueta hay que usar el nombre completo:
+`git push origin refs/tags/practica4`.
+
+---
+
+## Pruebas
+
+Se usan pruebas con pytest (más de 500). Algunas de las más importantes:
+
+- Cadenas y lenguajes: cadena vacía, alfabeto de un símbolo, Σ* contra Σ⁺ en longitud 0 y el límite de
+  200 000 cadenas.
+- Archivos: guardar y volver a abrir cada ejemplo en los tres formatos da el mismo autómata y el mismo
+  archivo.
+- Conversiones: el autómata original, el AFN sin λ, el AFD y el AFD mínimo aceptan **exactamente las
+  mismas cadenas** (todas las de longitud hasta 8, o menos si el alfabeto es grande), y además se revisa
+  con la prueba de equivalencia exacta.
+- Expresiones: cada expresión obtenida se revisa con derivadas de Brzozowski y con `re.fullmatch`.
+- Práctica: cada respuesta de referencia se compara con una definición independiente del lenguaje.
+- IA: se prueba con un cliente simulado, sin conectarse a internet.
 
 ```bash
-py -3.12 -m venv venv            # Windows   (macOS/Linux: python3 -m venv venv)
-venv\Scripts\activate            # Windows   (macOS/Linux: source venv/bin/activate)
-pip install -r requirements.txt
-python src/app.py                # abre la aplicación de escritorio
-pytest -q                        # ejecuta las pruebas
+pytest -q
 ```
 
-## Entrega con etiquetas
+---
 
-Las Prácticas 3 y 4 se identifican con las etiquetas `practica3` y `practica4`. Como en este
-repositorio también existen **ramas** con esos nombres, `git push origin practica3` falla por
-ambigüedad; use la referencia completa:
+## Estructura del proyecto
 
-```bash
-git tag -a practica4 -m "Entrega de la Practica 4"
-git push origin refs/tags/practica4
+```
+src/
+  app.py            arranque de la aplicación
+  core/             cadenas, lenguajes, autómata, simulación, expresiones regulares, ejemplos
+  formatos/         .jff, .json y .xml
+  algoritmos/       λ-clausura, quitar λ, subconjuntos, minimización, equivalencia,
+                    eliminación de estados, Thompson y validadores
+  practica/         ejercicios y su calificación automática
+  ia/               conexión con Claude, instrucciones del asistente y contexto de pantalla
+  ui/               interfaz (menú, editor, simulación, etc.)
+tests/              pruebas con pytest
+automatas/          ejemplos en .jff, .json y .xml, y el autómata TCP
+entorno/            Dockerfile y compose.yml
+render.yaml         despliegue en Render
 ```
 
-## Versiones
+La lógica (`core`, `formatos`, `algoritmos`, `practica`) no depende de Flet, así que todo se puede probar
+sin abrir la interfaz.
 
-* **Flet 0.86.5** (`flet[web]`), **pytest 8.3.4**.
-* **FastAPI fijada en 0.144.0**: `flet-web 0.86.5` usa un argumento que FastAPI eliminó en
-  0.145.0; con una versión posterior el servidor web no arranca (detalle en
-  [01-entorno.md](docs/practica1/01-entorno.md)).
-* **Diferencia observada entre versiones**: una secuencia de escape inválida (`"\]"`) pasaba
-  inadvertida en Python 3.11 (`DeprecationWarning`, oculto por omisión) y en 3.12 y 3.13 producía un
-  `SyntaxWarning` visible en `pytest`. Se corrigió y `pytest.ini` trata ahora `SyntaxWarning` como error.
+---
 
-## Convenciones
+## Referencias
 
-* **λ en los archivos**: en los tres formatos la transición λ es el símbolo leído vacío:
-  `<read/>` en `.jff`, `"lee": ""` en `.json` y `lee=""` en `.xml`. Al leer `.json` y `.xml` también
-  se aceptan `λ`, `lambda` y `ε`. JFLAP no guarda Σ: al importar un `.jff` se deduce de las transiciones.
-* **No determinismo**: el simulador sigue todos los caminos a la vez (conjunto de estados activos con
-  λ-clausura); la justificación y el coste están en [03-simulador.md](docs/practica2/03-simulador.md).
-
-* **λ** es la cadena vacía. Se escribe `λ`, `lambda` o se deja el campo vacío.
-* λ y la propia *w* se cuentan entre los prefijos y sufijos de *w*: hay *n + 1* de cada uno.
+- Anthropic. (2026). *Claude API documentation*. https://platform.claude.com/docs
+- Berners-Lee, T., Fielding, R., y Masinter, L. (2005). *Uniform Resource Identifier (URI): Generic Syntax*
+  (RFC 3986). https://doi.org/10.17487/RFC3986
+- Brzozowski, J. A., y McCluskey, E. J. (1963). Signal flow graph techniques for sequential circuit state
+  diagrams. *IEEE Transactions on Electronic Computers, EC-12*(2), 67-76. https://doi.org/10.1109/PGEC.1963.263416
+- Flet. (2026). *Flet 0.86.5*. https://pypi.org/project/flet/0.86.5/
+- Hopcroft, J. E., Motwani, R., y Ullman, J. D. (2007). *Introduction to automata theory, languages, and
+  computation* (3.ª ed.). Pearson/Addison-Wesley.
+- International Organization for Standardization. (2019). *ISO 8601-1:2019 Date and time —
+  Representations for information interchange — Part 1: Basic rules*.
+- Postel, J. (1981). *Transmission Control Protocol* (RFC 793). https://doi.org/10.17487/RFC0793
+- Python Software Foundation. (s. f.). *Status of Python versions*. https://devguide.python.org/versions/
+- Rabin, M. O., y Scott, D. (1959). Finite automata and their decision problems. *IBM Journal of Research
+  and Development, 3*(2), 114-125. https://doi.org/10.1147/rd.32.0114
+- Resnick, P. (Ed.). (2008). *Internet Message Format* (RFC 5322). https://doi.org/10.17487/RFC5322
+- Thompson, K. (1968). Programming techniques: Regular expression search algorithm. *Communications of the
+  ACM, 11*(6), 419-422. https://doi.org/10.1145/363347.363387

@@ -1,7 +1,7 @@
 """Autómatas de ejemplo integrados en el software.
 
 Son ejemplos propios, construidos para mostrar cada clase de autómata y para
-probar los algoritmos; no son soluciones de las listas de ejercicios.
+probar los algoritmos.
 """
 
 from __future__ import annotations

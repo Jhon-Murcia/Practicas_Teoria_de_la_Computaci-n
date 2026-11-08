@@ -18,6 +18,7 @@ from algoritmos.subconjuntos import construir_afd
 from ui.componentes.automatas import acciones_resultado, resumen_automata, selector_automata
 from ui.componentes.comunes import aviso, boton, chip, pestanas, refrescar, tarjeta, texto, titulo_pagina
 from ui.componentes.reproductor import Reproductor, tabla_control
+from ia.contexto import describir_automata
 from ui.estado import Estado
 from ui.tema import FUENTE_MONO, RADIO_CHICO, T, alfa
 
@@ -41,6 +42,7 @@ EXPLICACION = {
 class PaginaConversiones:
     def __init__(self, estado: Estado):
         self.estado = estado
+        estado.contexto_ia = self._contexto_ia
         if estado.actual is None:
             estado.agregar_automata(ejemplos.a_estrella_b_estrella_c_estrella())
         self.algoritmo = estado.recuperar("conv.algoritmo", "cerradura")
@@ -226,6 +228,10 @@ class PaginaConversiones:
         ]
 
     # ------------------------------------------------------------------
+    def _contexto_ia(self) -> str:
+        return (f"Algoritmo: {dict(ALGORITMOS)[self.algoritmo]}.\n{describir_automata(self.a)}\n"
+                f"{self.reproductor.descripcion()}")
+
     def vista(self) -> ft.Control:
         return ft.Column([
             titulo_pagina("Conversión de autómatas",

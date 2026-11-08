@@ -30,6 +30,7 @@ def bloque_codigo(etiqueta: str, valor: str, color: str) -> ft.Control:
 class PaginaValidadores:
     def __init__(self, estado: Estado):
         self.estado = estado
+        estado.contexto_ia = self._contexto_ia
         self.clave = estado.recuperar("val.clave", "correo")
         self.selector = ft.Container()
         self.cuerpo = ft.Column(spacing=16)
@@ -120,9 +121,22 @@ class PaginaValidadores:
                        texto("re.fullmatch coincide con el autómata." if coincide else
                              "¡re.fullmatch no coincide con el autómata!", 11.5,
                              T.texto_3 if coincide else T.error)], spacing=2, expand=True),
+            ft.TextButton("¿Por qué?", icon=ft.Icons.AUTO_AWESOME,
+                          tooltip="Pedir al asistente de IA que explique el resultado",
+                          on_click=lambda e: self.estado.preguntar_ia("¿Por qué este texto es "
+                                                                      + ("válido" if r.aceptada else "inválido")
+                                                                      + " según el validador?")),
         ], spacing=12), padding=14, border_radius=12, bgcolor=alfa(color, 0.1), border=ft.Border.all(1, alfa(color, 0.4)))
         if actualizar:
             refrescar(self.resultado)
+
+    def _contexto_ia(self) -> str:
+        v = V.VALIDADORES[self.clave]
+        valor = self.entrada.value or ""
+        valido = V.validar(self.clave, valor)
+        return (f"Validador: {v.nombre}. {v.descripcion}\nExpresión (notación del curso): {v.expresion}\n"
+                f"Clases: {v.clases}\nTexto escrito: «{valor}», resultado: {'válido' if valido else 'no válido'}.\n"
+                "Límites: " + " ".join(v.limites))
 
     def vista(self) -> ft.Control:
         return ft.Column([

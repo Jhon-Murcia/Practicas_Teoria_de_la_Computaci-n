@@ -11,6 +11,7 @@ from core.automata import LAMBDA, Automata, ErrorAutomata, leer_simbolo, mostrar
 from core.disposicion import disponer
 from ui.componentes.comunes import (aviso, boton, boton_icono, campo, chip, pestanas, refrescar, texto)
 from ui.componentes.lienzo import Lienzo, Seleccion
+from ia.contexto import describir_automata
 from ui.estado import Estado
 from ui.tema import FUENTE_MONO, RADIO, RADIO_CHICO, T, alfa
 
@@ -51,6 +52,7 @@ def parsear_simbolos(texto: str) -> list[str]:
 class PaginaEditor:
     def __init__(self, estado: Estado):
         self.estado = estado
+        estado.contexto_ia = self._contexto_ia
         if estado.actual is None:
             estado.agregar_automata(ejemplos.termina_en_ab())
         self.pestana = estado.recuperar("editor.pestana", "propiedades")
@@ -540,6 +542,13 @@ class PaginaEditor:
         ]
 
     # ------------------------------------------------------------------
+    def _contexto_ia(self) -> str:
+        texto = describir_automata(self.a)
+        sel = self.lienzo.seleccion
+        if sel:
+            texto += f"\nElemento seleccionado en el lienzo: {sel[0]} {sel[1]}."
+        return texto
+
     def vista(self) -> ft.Control:
         estrecho = self.estado.ancho < 1100
         panel_derecho = ft.Container(

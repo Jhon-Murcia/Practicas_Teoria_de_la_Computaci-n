@@ -15,7 +15,7 @@ from algoritmos.equivalencia import comparar
 from algoritmos.thompson import thompson
 from algoritmos.tuberia import desde_texto
 
-# Expresiones propias de prueba (no son de las listas).
+# Expresiones propias de prueba.
 EXPRESIONES = [
     "a", "λ", "∅", "ab", "a+b", "a*", "(a+b)*", "(a+b)*abb", "a*b*c*", "(ab+ba)*", "a(a+b)*b+b(a+b)*a",
     "(a+λ)(b+λ)", "((a*)*)*", "(a+b)*a(a+b)(a+b)", "(aa)*+(bbb)*", "∅*", "a∅+b", "(0+1(01*0)*1)*",
@@ -182,7 +182,7 @@ FUERA = [" ", "#", "ñ", "!", "é"]
 
 
 def generar_casos(v: V.Validador, semilla: int = 2026, total: int = 600) -> list[str]:
-    """Procedimiento de generación (documentado en docs/practica4):
+    """Procedimiento de generación (descrito también en el README):
 
     1. 40 % cadenas válidas tomadas al azar del lenguaje de la expresión
        (``muestra`` recorre el árbol eligiendo ramas y repeticiones al azar).

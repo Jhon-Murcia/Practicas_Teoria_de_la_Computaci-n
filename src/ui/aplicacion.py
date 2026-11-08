@@ -14,13 +14,14 @@ from typing import Any, Callable
 
 import flet as ft
 
+from ui.componentes.asistente import PanelAsistente
 from ui.estado import Estado
 from ui.tema import CLARO, FUENTES, OSCURO, RADIO_CHICO, T, alfa, tema_flet
 from ui.paginas import (archivos, ayuda, cadenas, conversiones, editor, expresiones, inicio, lenguajes,
-                        minimizacion, simulacion, validadores)
+                        minimizacion, practica, simulacion, validadores)
 
 NOMBRE_APP = "AutómataLab"
-VERSION = "4.0 · Práctica 4"
+VERSION = "4.1 · IA"
 
 
 @dataclass(frozen=True)
@@ -56,6 +57,8 @@ MODULOS: list[Modulo] = [
            "Expresiones", expresiones.construir, "ER ↔ autómata con Thompson y eliminación de estados"),
     Modulo("validadores", "Validadores", ft.Icons.VERIFIED_OUTLINED, ft.Icons.VERIFIED_ROUNDED,
            "Expresiones", validadores.construir, "Correo, teléfono, fecha y URL con autómatas"),
+    Modulo("practica", "Práctica", ft.Icons.FITNESS_CENTER_OUTLINED, ft.Icons.FITNESS_CENTER_ROUNDED,
+           "Aprender", practica.construir, "Ejercicios evaluados por el sistema, con pistas de la IA"),
     Modulo("ayuda", "Ayuda", ft.Icons.HELP_OUTLINE_ROUNDED, ft.Icons.HELP_ROUNDED,
            "Soporte", ayuda.construir, "Guía y convenciones"),
 ]
@@ -67,6 +70,8 @@ class Aplicacion:
         self.estado = Estado(page=page)
         self.estado.navegar = self.ir
         self.estado.modulos = MODULOS
+        self.asistente = PanelAsistente(self.estado)
+        self.estado.preguntar_ia = self.asistente.preguntar
         self.actual = "inicio"
         self.compacto = False
         self.contenido = ft.AnimatedSwitcher(
@@ -139,6 +144,8 @@ class Aplicacion:
     def reconstruir(self) -> None:
         modulo = self._modulo()
         self.estado.teclado = None
+        self.estado.modulo_actual = modulo.clave
+        self.estado.contexto_ia = None
         try:
             vista = modulo.construir(self.estado)
         except Exception as exc:  # una pantalla rota no debe tumbar la aplicación
@@ -150,6 +157,7 @@ class Aplicacion:
         self.contenido.content = ft.Container(cuerpo, key=f"{modulo.clave}-{T.nombre}",
                                               padding=ft.Padding.only(left=32, right=32, top=24, bottom=24),
                                               expand=True)
+        self.asistente.construir()
         self.page.controls.clear()
         self.page.add(
             ft.Row(
@@ -157,6 +165,7 @@ class Aplicacion:
                     self._menu_lateral(),
                     ft.Container(width=1, bgcolor=T.borde),
                     ft.Column([self._barra_superior(modulo), self.contenido], spacing=0, expand=True),
+                    self.asistente.control,
                 ],
                 spacing=0,
                 expand=True,
@@ -268,6 +277,12 @@ class Aplicacion:
                             ft.Icon(ft.Icons.CHEVRON_RIGHT, size=16, color=T.texto_3),
                             ft.Text(m.etiqueta, size=12.5, color=T.texto, weight=ft.FontWeight.W_600)],
                            spacing=4, expand=True),
+                    ft.FilledTonalButton(
+                        "Asistente IA", icon=ft.Icons.AUTO_AWESOME, on_click=lambda e: self.asistente.alternar(),
+                        tooltip="Abrir o cerrar el asistente de IA",
+                        style=ft.ButtonStyle(bgcolor=T.primario_suave, color=T.primario, icon_color=T.primario,
+                                             shape=ft.RoundedRectangleBorder(radius=20)),
+                    ),
                     ft.Container(
                         ft.Row([ft.Icon(ft.Icons.SCHOOL_OUTLINED, size=15, color=T.acento),
                                 ft.Text("IPN · ESCOM", size=12, color=T.texto_2)], spacing=6, tight=True),
