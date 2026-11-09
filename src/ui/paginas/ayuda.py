@@ -146,7 +146,7 @@ SECCIONES: list[tuple[str, object, str]] = [
 * En **Práctica** el sistema califica tus respuestas comparándolas con una respuesta oculta (prueba de
   equivalencia) y, si fallan, muestra una cadena concreta. La IA puede darte una pista o proponer
   ejercicios nuevos, que el sistema valida antes de usarlos.
-* Para activar la IA el servidor necesita la variable `ANTHROPIC_API_KEY`.
+* Para activar la IA el servidor necesita la variable `IA_API_KEY` (una clave gratuita de Groq).
 """,
     ),
     (

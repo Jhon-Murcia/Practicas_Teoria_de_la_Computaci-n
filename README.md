@@ -65,11 +65,12 @@ docker compose down            # para apagarla
 
 ### Para usar el asistente de IA
 
-El asistente necesita una clave de la API de Claude. Se pone en una variable de entorno antes de
-arrancar el programa:
+El asistente usa **Groq**, que es gratis. Hay que crear una cuenta en https://console.groq.com (no pide
+tarjeta), ir a *API Keys*, crear una clave y ponerla en una variable de entorno antes de arrancar el
+programa:
 
 ```powershell
-$env:ANTHROPIC_API_KEY = "sk-ant-..."
+$env:IA_API_KEY = "gsk_..."
 ```
 
 Sin la clave todo el programa funciona igual, sólo que el asistente aparece desactivado.
@@ -257,17 +258,26 @@ de un ejercicio; da pistas y preguntas que ayuden a pensarlo. Esa regla está en
 todo modelo de lenguaje, se puede equivocar, por eso los resultados del programa (simulación,
 equivalencia, evaluación) siempre los calculan los algoritmos y no la IA.
 
-Usa el modelo **Claude** de Anthropic mediante su SDK oficial (`anthropic`). La clave se lee del servidor y
-nunca llega al navegador. Se configura con variables de entorno:
+Para que no tenga ningún costo, usa el modelo abierto **gpt-oss-120b** (publicado por OpenAI) a través de
+**Groq**, que tiene un plan gratuito sin tarjeta. Groq funciona igual que la API de OpenAI, así que el
+programa se conecta con la librería `openai` cambiando la dirección. La clave se lee del servidor y nunca
+llega al navegador. Se configura con variables de entorno:
 
 | Variable | Para qué | Valor por omisión |
 |---|---|---|
-| `ANTHROPIC_API_KEY` | Clave de la API | (ninguno: sin ella la IA queda apagada) |
-| `IA_MODELO` | Modelo que se usa | `claude-opus-5-5` |
+| `IA_API_KEY` | Clave de la API (de Groq) | (ninguno: sin ella la IA queda apagada) |
+| `IA_URL` | Dirección de la API | `https://api.groq.com/openai/v1` |
+| `IA_MODELO` | Modelo que se usa | `openai/gpt-oss-120b` |
 | `IA_LIMITE_SESION` | Consultas por sesión del navegador | `40` |
 
-Si se quiere gastar menos se puede poner `IA_MODELO=claude-haiku-5-5`, que es bastante más barato. El
-límite por sesión existe para que, si la página queda pública, nadie gaste la clave sin control.
+El plan gratuito tiene límites por minuto y por día (se ven en la consola de Groq, en *Settings → Limits*).
+Si se pasan, el asistente avisa que hay que esperar; no cobra nada. El límite por sesión existe para que,
+si la página queda pública, una sola persona no se gaste toda la cuota del día.
+
+Como la conexión es la estándar de OpenAI, se puede cambiar de servicio sin tocar el código. Por ejemplo,
+Gemini de Google también tiene plan gratuito: se crea una clave en https://aistudio.google.com y se pone
+`IA_URL=https://generativelanguage.googleapis.com/v1beta/openai/` y en `IA_MODELO` un modelo Flash de los
+que la página de Google marque como gratuitos.
 
 ### Práctica
 
@@ -291,8 +301,8 @@ lee el puerto de la variable `PORT` que pone Render.
 
 1. Entrar a https://render.com con la cuenta de GitHub.
 2. **New → Blueprint** y elegir este repositorio. Render lee `render.yaml` y crea el servicio web.
-3. Cuando lo pida, escribir el valor de `ANTHROPIC_API_KEY` (también se puede cambiar después en
-   *Environment*).
+3. Cuando lo pida, escribir el valor de `IA_API_KEY`, la clave gratuita de Groq (también se puede
+   cambiar después en *Environment*).
 4. Esperar a que termine el build y abrir la dirección `https://….onrender.com` que da Render.
 
 Cosas a tener en cuenta:
@@ -300,8 +310,8 @@ Cosas a tener en cuenta:
 - En el plan gratuito el servicio se apaga si nadie lo usa un rato y la primera visita tarda en cargar.
 - Los autómatas de cada persona viven en su sesión del navegador; si se recarga la página se pierden,
   así que conviene usar *Archivos → Guardar proyecto*.
-- Cada consulta a la IA cuesta según el modelo. Con la página pública conviene dejar un límite por
-  sesión bajo o usar `claude-haiku-5-5`.
+- La IA no cuesta nada, pero la cuota gratuita de Groq se comparte entre todos los que usen la página.
+  Si mucha gente la usa a la vez, el asistente puede pedir que se espere un minuto.
 
 ---
 
@@ -373,7 +383,7 @@ src/
   algoritmos/       λ-clausura, quitar λ, subconjuntos, minimización, equivalencia,
                     eliminación de estados, Thompson y validadores
   practica/         ejercicios y su calificación automática
-  ia/               conexión con Claude, instrucciones del asistente y contexto de pantalla
+  ia/               conexión con el modelo (Groq), instrucciones del asistente y contexto de pantalla
   ui/               interfaz (menú, editor, simulación, etc.)
 tests/              pruebas con pytest
 automatas/          ejemplos en .jff, .json y .xml, y el autómata TCP
@@ -388,12 +398,12 @@ sin abrir la interfaz.
 
 ## Referencias
 
-- Anthropic. (2026). *Claude API documentation*. https://platform.claude.com/docs
 - Berners-Lee, T., Fielding, R., y Masinter, L. (2005). *Uniform Resource Identifier (URI): Generic Syntax*
   (RFC 3986). https://doi.org/10.17487/RFC3986
 - Brzozowski, J. A., y McCluskey, E. J. (1963). Signal flow graph techniques for sequential circuit state
   diagrams. *IEEE Transactions on Electronic Computers, EC-12*(2), 67-76. https://doi.org/10.1109/PGEC.1963.263416
 - Flet. (2026). *Flet 0.86.5*. https://pypi.org/project/flet/0.86.5/
+- Groq. (2026). *GroqCloud documentation*. https://console.groq.com/docs
 - Hopcroft, J. E., Motwani, R., y Ullman, J. D. (2007). *Introduction to automata theory, languages, and
   computation* (3.ª ed.). Pearson/Addison-Wesley.
 - International Organization for Standardization. (2019). *ISO 8601-1:2019 Date and time —

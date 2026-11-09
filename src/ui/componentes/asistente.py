@@ -46,8 +46,9 @@ class PanelAsistente:
         self.entrada.disabled = not disponible
         aviso = [] if disponible else [ft.Container(ft.Column([
             texto("El asistente no está configurado.", 13, T.aviso, peso=ft.FontWeight.W_700),
-            texto("Defina la variable de entorno ANTHROPIC_API_KEY en el servidor (en Render: Environment) y "
-                  "reinicie la aplicación. El resto del sistema funciona sin IA.", 12, T.texto_2),
+            texto("Defina la variable de entorno IA_API_KEY en el servidor (en Render: Environment) y "
+                  "reinicie la aplicación. La clave gratuita se obtiene en console.groq.com. El resto del "
+                  "sistema funciona sin IA.", 12, T.texto_2),
         ], spacing=4), padding=12, border_radius=RADIO_CHICO, bgcolor=alfa(T.aviso, 0.1),
             border=ft.Border.all(1, alfa(T.aviso, 0.35)))]
         self._actualizar_estado()
@@ -153,7 +154,7 @@ class PanelAsistente:
             self.alternar(True)
         if self.enviando or not cliente.disponible():
             if not cliente.disponible():
-                self.estado.notificar("El asistente no está configurado (falta ANTHROPIC_API_KEY).", "aviso")
+                self.estado.notificar("El asistente no está configurado (falta IA_API_KEY).", "aviso")
             return
         self.estado.page.run_task(self._enviar, pregunta)
 

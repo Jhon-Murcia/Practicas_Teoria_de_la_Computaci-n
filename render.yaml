@@ -1,5 +1,5 @@
 # Despliegue en Render (Blueprint). En Render: New > Blueprint, elegir este
-# repositorio y escribir el valor de ANTHROPIC_API_KEY cuando lo pida.
+# repositorio y escribir el valor de IA_API_KEY cuando lo pida.
 services:
   - type: web
     name: automatalab
@@ -11,12 +11,15 @@ services:
     healthCheckPath: /
     autoDeploy: true
     envVars:
-      # Clave de la API de Claude. Sin ella la aplicación funciona, pero sin IA.
-      - key: ANTHROPIC_API_KEY
+      # Clave gratuita de Groq (console.groq.com). Sin ella la aplicación
+      # funciona, pero sin IA.
+      - key: IA_API_KEY
         sync: false
-      # Modelo del asistente. claude-haiku-5-5 es mucho más barato.
+      # Servicio y modelo del asistente (Groq, plan gratuito).
+      - key: IA_URL
+        value: https://api.groq.com/openai/v1
       - key: IA_MODELO
-        value: claude-opus-5-5
+        value: openai/gpt-oss-120b
       # Consultas a la IA permitidas por cada sesión del navegador.
       - key: IA_LIMITE_SESION
         value: "40"
