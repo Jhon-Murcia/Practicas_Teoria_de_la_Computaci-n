@@ -225,7 +225,7 @@ class PaginaPractica:
             ft.Row([boton("Generar ejercicio", self.generar, ft.Icons.AUTO_AWESOME,
                           disabled=not disponible or self.generando)]),
             self.salida_generador,
-            *([] if disponible else [aviso("La IA no está configurada (falta ANTHROPIC_API_KEY). Los ejercicios del "
+            *([] if disponible else [aviso("La IA no está configurada (falta IA_API_KEY). Los ejercicios del "
                                            "banco funcionan igual.", "aviso")]),
         ], spacing=12)
         return tarjeta(controles, "Nuevo ejercicio con IA", ft.Icons.AUTO_AWESOME)

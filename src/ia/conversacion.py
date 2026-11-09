@@ -8,7 +8,7 @@ from typing import Awaitable, Callable, Optional
 from ia import cliente
 from ia.prompts import SISTEMA_TUTOR, mensaje_con_contexto
 
-MAX_MENSAJES = 12   # se envían a la API sólo los últimos turnos, para acotar el costo
+MAX_MENSAJES = 8    # se envían sólo los últimos turnos, para no agotar la cuota gratuita de tokens
 
 
 @dataclass
