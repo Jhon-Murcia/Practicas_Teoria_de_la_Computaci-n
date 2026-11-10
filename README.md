@@ -1,6 +1,13 @@
-<!-- Portada: nombre, boleta, grupo, carrera, unidad de aprendizaje, profesor y fechas. -->
+
 
 # AutómataLab
+
+Escuela: Escuela Superior de Cómputo IPN
+Estudiante: Jhon Sebastian Murcia Romero
+Docente: Gabriel Hurtado áviles
+Asignatura: Teoría de la Computación
+10/11/2026
+
 
 ![pruebas](https://github.com/Jhon-Murcia/Practicas_Teoria_de_la_Computaci-n/actions/workflows/pruebas.yml/badge.svg)
 
