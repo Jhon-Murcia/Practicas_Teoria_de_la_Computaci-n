@@ -3,9 +3,13 @@
 # AutómataLab
 
 Escuela: Escuela Superior de Cómputo IPN
+
 Estudiante: Jhon Sebastian Murcia Romero
+
 Docente: Gabriel Hurtado áviles
+
 Asignatura: Teoría de la Computación
+
 10/11/2026
 
 
