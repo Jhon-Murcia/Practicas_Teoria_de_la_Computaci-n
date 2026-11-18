@@ -15,7 +15,7 @@ from algoritmos.eliminacion_lambda import eliminar_lambda
 from algoritmos.minimizacion import minimizar
 from algoritmos.pasos import conjunto
 from algoritmos.subconjuntos import construir_afd
-from ui.componentes.automatas import acciones_resultado, resumen_automata, selector_automata
+from ui.componentes.automatas import acciones_resultado, original_y_resultado, resumen_automata, selector_automata
 from ui.componentes.comunes import aviso, boton, chip, pestanas, refrescar, tarjeta, texto, titulo_pagina
 from ui.componentes.reproductor import Reproductor, tabla_control
 from ia.contexto import describir_automata
@@ -155,7 +155,8 @@ class PaginaConversiones:
             texto("Transiciones agregadas: " + ("; ".join(agregadas) if agregadas else "ninguna"), 12.5, T.texto_2,
                   mono=True, selectable=True),
             acciones_resultado(self.estado, lambda: self.salida, f"{self.a.nombre} (sin λ)"),
-        ], spacing=12), "Resultado", ft.Icons.CHECK_CIRCLE_OUTLINE)]
+        ], spacing=12), "Resultado", ft.Icons.CHECK_CIRCLE_OUTLINE),
+            original_y_resultado(self.a, self.salida, "AFN sin λ")]
 
     def _resultado_subconjuntos(self, tabla) -> list[ft.Control]:
         n = len(self.a.estados)
@@ -165,7 +166,8 @@ class PaginaConversiones:
                   f"{len(self.salida.estados)} (sólo los alcanzables desde el inicial).", 13, T.texto_2),
             tabla_control(tabla),
             acciones_resultado(self.estado, lambda: self.salida, f"{self.a.nombre} (AFD)"),
-        ], spacing=12), "Tabla de transiciones del AFD", ft.Icons.GRID_ON)]
+        ], spacing=12), "Tabla de transiciones del AFD", ft.Icons.GRID_ON),
+            original_y_resultado(self.a, self.salida, "AFD por subconjuntos")]
 
     # ------------------------------------------------------------------
     def _er(self, a: Automata) -> None:
@@ -224,6 +226,7 @@ class PaginaConversiones:
             ft.ResponsiveRow(tarjetas, spacing=12, run_spacing=12),
             aviso(f"El AFD mínimo tiene {len(minimo.estados)} estados, no más que los {len(afd.estados)} del AFD "
                   "de subconjuntos.", "exito"),
+            original_y_resultado(a, minimo, "AFD mínimo"),
             acciones_resultado(self.estado, lambda: self.salida, f"{a.nombre} (mínimo)"),
         ]
 

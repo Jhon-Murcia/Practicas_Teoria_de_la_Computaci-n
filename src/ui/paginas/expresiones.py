@@ -14,7 +14,7 @@ from algoritmos.eliminacion_estados import eliminar_estados
 from algoritmos.equivalencia import comparar
 from algoritmos.tuberia import Resultado, desde_expresion, desde_texto
 from formatos import EXTENSIONES, ErrorFormato, cargar, exportar
-from ui.componentes.automatas import acciones_resultado, resumen_automata, selector_automata
+from ui.componentes.automatas import acciones_resultado, original_y_resultado, resumen_automata, selector_automata
 from ui.componentes.comunes import (aviso, boton, campo, chip, pestanas, refrescar, tarjeta, texto, titulo_pagina)
 from ui.componentes.reproductor import Reproductor
 from ia.contexto import describir_automata
@@ -191,6 +191,7 @@ class PaginaExpresiones:
                     "Árbol sintáctico", ft.Icons.ACCOUNT_TREE_OUTLINED), col={"xs": 12, "lg": 6}),
             ], spacing=16, run_spacing=16),
             ft.ResponsiveRow(tarjetas, spacing=12, run_spacing=12),
+            original_y_resultado(res.afn_lambda, res.minimo, "AFD mínimo", "AFN-λ de Thompson"),
             tarjeta(self.reproductor.vista(), f"Paso a paso: {res.etapas[self.etapa].titulo}", ft.Icons.TIMELINE),
             tarjeta(ft.Column([
                 ft.Row([ft.Container(self.cadena, expand=True),

@@ -11,7 +11,7 @@ from core.automata import Automata
 from algoritmos.equivalencia import comparar
 from algoritmos.minimizacion import minimizar, renombrar_canonico, tabla_distinguibles
 from algoritmos.subconjuntos import construir_afd
-from ui.componentes.automatas import acciones_resultado, resumen_automata, selector_automata
+from ui.componentes.automatas import acciones_resultado, original_y_resultado, resumen_automata, selector_automata
 from ui.componentes.comunes import aviso, boton, chip, pestanas, refrescar, tarjeta, texto, titulo_pagina
 from ui.componentes.lienzo import Lienzo
 from ui.componentes.reproductor import Reproductor, tabla_control
@@ -118,6 +118,7 @@ class PaginaMinimizacion:
                 ft.Container(tarjeta(self.panel_pares, "Método de la tabla de pares distinguibles",
                                      ft.Icons.GRID_4X4), col={"xs": 12, "lg": 7}),
             ], spacing=16, run_spacing=16),
+            original_y_resultado(a, self.minimo, "AFD mínimo", "AFD de entrada"),
         ]
 
     def _convertir_y_minimizar(self) -> None:

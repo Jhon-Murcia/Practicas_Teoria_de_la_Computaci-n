@@ -63,8 +63,12 @@ SECCIONES: list[tuple[str, object, str]] = [
   conjunto tiene un solo estado.
 * Cada paso muestra los activos antes, las transiciones tomadas, el resultado de leer el símbolo, las
   transiciones λ y los activos después. Use los botones ⏮ ◀ ▶ ⏭ o la reproducción automática.
+* El diagrama resalta en cada paso los estados activos y las transiciones usadas; la cinta separa lo
+  **leído** de lo que falta **por leer**.
 * La pestaña **Árbol de caminos** muestra cada computación posible con sus bifurcaciones.
 * Una cadena se acepta si, al terminar, algún estado activo pertenece a F.
+* En Conversiones, Minimización y Expresiones regulares se ven **lado a lado** el autómata original y el
+  obtenido. Los estados de cualquier diagrama se pueden arrastrar.
 """,
     ),
     (
