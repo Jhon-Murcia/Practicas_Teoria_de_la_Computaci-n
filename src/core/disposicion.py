@@ -77,7 +77,9 @@ def asegurar_posiciones(a: Automata) -> None:
     if len(faltan) == len(a.estados):
         a.posiciones = disponer(a)
         return
-    nuevas = disponer(a)
+    # Los que faltan van en filas debajo del dibujo existente, seis por fila,
+    # para que ninguno caiga sobre otro estado.
+    min_x = min((x for x, _ in a.posiciones.values()), default=MARGEN)
     max_y = max((y for _, y in a.posiciones.values()), default=0.0)
     for i, q in enumerate(faltan):
-        a.posiciones[q] = (nuevas[q][0], max_y + SEP_Y + (i // 6) * SEP_Y)
+        a.posiciones[q] = (min_x + (i % 6) * SEP_X, max_y + SEP_Y + (i // 6) * SEP_Y)

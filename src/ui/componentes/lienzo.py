@@ -62,7 +62,9 @@ class Lienzo:
 
         self._arrastrando: Optional[str] = None
         self._ultimo: Optional[tuple[float, float]] = None
-        self._ajustado = False
+        # Mientras el usuario no mueva ni acerque la vista, se vuelve a encuadrar
+        # en cada cambio de tamaño (el primer tamaño que llega puede ser provisional).
+        self._interactuado = False
         self._movido = False
         self._aristas: list[Arista] = []
 
@@ -131,6 +133,7 @@ class Lienzo:
 
     def ajustar(self, actualizar: bool = True) -> None:
         """Encuadra todo el autómata en el área visible."""
+        self._interactuado = False
         if self.a is None or not self.a.posiciones:
             self.zoom, self.ox, self.oy = 1.0, 40.0, 40.0
         else:
@@ -155,6 +158,7 @@ class Lienzo:
         return (x - self.ox) / self.zoom, (y - self.oy) / self.zoom
 
     def _zoom_en(self, sx: float, sy: float, factor: float) -> None:
+        self._interactuado = True
         nuevo = max(0.25, min(self.zoom * factor, 3.5))
         wx, wy = self._mundo(sx, sy)
         self.zoom = nuevo
@@ -166,8 +170,7 @@ class Lienzo:
     # ------------------------------------------------------------------
     def _al_redimensionar(self, e: cv.CanvasResizeEvent) -> None:
         self.ancho, self.alto = float(e.width), float(e.height)
-        if not self._ajustado:
-            self._ajustado = True
+        if not self._interactuado:
             self.ajustar()
         else:
             self.dibujar()
@@ -238,6 +241,7 @@ class Lienzo:
             return
         dx, dy = x - self._ultimo[0], y - self._ultimo[1]
         self._ultimo = (x, y)
+        self._interactuado = True
         if self._arrastrando and self.a is not None:
             if not self._movido and self.al_antes_de_cambiar:
                 self.al_antes_de_cambiar()

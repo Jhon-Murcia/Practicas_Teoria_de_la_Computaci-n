@@ -21,7 +21,7 @@ from ui.paginas import (archivos, ayuda, cadenas, conversiones, editor, expresio
                         minimizacion, practica, simulacion, validadores)
 
 NOMBRE_APP = "AutómataLab"
-VERSION = "4.1 · IA"
+VERSION = "5.0"
 
 
 @dataclass(frozen=True)

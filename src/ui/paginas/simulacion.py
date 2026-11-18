@@ -8,6 +8,7 @@ from typing import Optional
 import flet as ft
 
 from core import ejemplos
+from core.animacion import Cuadro, cuadros
 from core.automata import LAMBDA, Automata, mostrar_simbolo
 from core.lenguajes import mostrar
 from core.simulacion import (Arbol, Nodo, Resultado, arbol_computacion, informe_lote, leer_lineas, simular,
@@ -77,6 +78,7 @@ class PaginaSimulacion:
         self.estado.recordar("sim.cadena", cadena)
         cadena = "" if cadena.strip() in ("λ", "lambda") else cadena
         self.resultado = simular(self.a, cadena)
+        self.cuadros = cuadros(self.resultado)
         self.k = len(self.resultado.pasos)
         if registrar:
             r = self.resultado
@@ -116,24 +118,18 @@ class PaginaSimulacion:
     # ------------------------------------------------------------------
     # Estado visible en el paso k
     # ------------------------------------------------------------------
-    def _activos(self) -> tuple[frozenset[str], list[tuple[str, str, str]]]:
-        r = self.resultado
-        if self.k == 0:
-            return r.inicio, r.lambda_inicio
-        p = r.pasos[self.k - 1]
-        return p.despues, p.transiciones + p.transiciones_lambda
+    @property
+    def cuadro(self) -> Cuadro:
+        """Lo que se resalta en el paso k; se calcula en core.animacion, no aquí."""
+        return self.cuadros[self.k]
 
     def _actualizar(self) -> None:
-        r = self.resultado
-        activos, usadas = self._activos()
-        terminado = self.k == len(r.pasos)
-        if r.error and terminado:
-            color = T.error
-        elif terminado:
-            color = T.exito if r.aceptada else T.error
+        c = self.cuadro
+        if c.terminado:
+            color = T.exito if c.veredicto else T.error
         else:
             color = T.acento
-        self.lienzo.resaltar(activos, {(o, d) for o, _, d in usadas}, color)
+        self.lienzo.resaltar(c.activos, c.aristas, color)
         self._construir_controles()
         self._construir_cinta()
         self._construir_banner()
@@ -180,11 +176,19 @@ class PaginaSimulacion:
             ))
         cabeza = ("Configuración inicial: aún no se ha leído ningún símbolo." if self.k == 0
                   else f"Se han leído {self.k} de {len(r.simbolos)} símbolos.")
+        c = self.cuadro
+        partes = ft.Row([
+            texto("Leído:", 12.5, T.texto_3),
+            texto("".join(c.leido) or "λ", 13, T.primario, mono=True, peso=ft.FontWeight.W_700),
+            texto("Por leer:", 12.5, T.texto_3),
+            texto("".join(c.pendiente) or "λ", 13, T.texto, mono=True, peso=ft.FontWeight.W_700),
+        ], spacing=8)
         self.cinta.content = ft.Column([
             ft.Row([ft.Icon(ft.Icons.STRAIGHTEN, size=16, color=T.texto_3), texto("Cinta de entrada", 13, T.texto_2,
                                                                                     peso=ft.FontWeight.W_600),
                     texto(cabeza, 12, T.texto_3)], spacing=8),
             ft.Row(celdas, spacing=6, scroll=ft.ScrollMode.AUTO),
+            partes,
         ], spacing=10)
 
     def _construir_banner(self) -> None:
@@ -241,8 +245,7 @@ class PaginaSimulacion:
                            T.lambda_),
                 self._fila("Después de la λ-clausura", conjunto(p.despues, a), T.acento),
             ]
-        activos, _ = self._activos()
-        finales = activos & a.aceptacion
+        finales = self.cuadro.activos & a.aceptacion
         filas.append(self._fila("Activos en F", conjunto(finales, a), T.exito if finales else T.texto_3))
         if a.descripcion:
             filas.append(ft.Container(texto(a.descripcion, 12, T.texto_3), padding=ft.Padding.only(top=6)))

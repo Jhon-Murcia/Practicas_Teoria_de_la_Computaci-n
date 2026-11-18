@@ -30,12 +30,13 @@ Este README es la documentación del proyecto.
 4. [Práctica 2: autómatas, simulación y archivos](#práctica-2-autómatas-simulación-y-archivos)
 5. [Práctica 3: conversiones y minimización](#práctica-3-conversiones-y-minimización)
 6. [Práctica 4: expresiones regulares y validadores](#práctica-4-expresiones-regulares-y-validadores)
-7. [Asistente de IA y sección de práctica](#asistente-de-ia-y-sección-de-práctica)
-8. [Despliegue en Render](#despliegue-en-render)
-9. [Entorno: Docker y tres versiones de Python](#entorno-docker-y-tres-versiones-de-python)
-10. [Pruebas](#pruebas)
-11. [Estructura del proyecto](#estructura-del-proyecto)
-12. [Referencias](#referencias)
+7. [Práctica 5: visualización de autómatas](#práctica-5-visualización-de-autómatas)
+8. [Asistente de IA y sección de práctica](#asistente-de-ia-y-sección-de-práctica)
+9. [Despliegue en Render](#despliegue-en-render)
+10. [Entorno: Docker y tres versiones de Python](#entorno-docker-y-tres-versiones-de-python)
+11. [Pruebas](#pruebas)
+12. [Estructura del proyecto](#estructura-del-proyecto)
+13. [Referencias](#referencias)
 
 ---
 
@@ -64,15 +65,59 @@ python src/app.py
 
 y luego se abre http://localhost:8550.
 
-### Con Docker
+### En otro equipo con Docker Desktop
 
-Desde la carpeta `entorno/`:
+Con Docker no hace falta instalar Python ni ninguna librería: la imagen ya trae Python, el entorno
+virtual y todas las dependencias de `requirements.txt` con sus versiones fijas. Sólo se necesita
+**Docker Desktop** (y Git para clonar el repositorio; también sirve descargarlo desde GitHub con
+*Code → Download ZIP*).
 
-```bash
-docker compose build
-docker compose up py312        # la aplicación queda en http://localhost:8550
-docker compose down            # para apagarla
+1. Abrir Docker Desktop y esperar a que diga que el motor está corriendo (*Engine running*).
+2. Clonar el repositorio y entrar a la carpeta `entorno/`:
+
+   ```powershell
+   git clone https://github.com/Jhon-Murcia/Practicas_Teoria_de_la_Computaci-n.git
+   cd Practicas_Teoria_de_la_Computaci-n/entorno
+   ```
+
+3. Construir las imágenes. Sólo se hace la primera vez (o si cambia `requirements.txt`) y tarda unos
+   minutos porque descarga Python e instala las dependencias dentro de la imagen:
+
+   ```powershell
+   docker compose build
+   ```
+
+4. Arrancar la aplicación con Python 3.12:
+
+   ```powershell
+   docker compose up py312
+   ```
+
+5. Abrir http://localhost:8550 en el navegador.
+6. Para apagarla: `Ctrl+C` en la terminal y después `docker compose down`.
+
+Las siguientes veces basta con abrir Docker Desktop y hacer los pasos 4 y 5. La carpeta del proyecto
+se monta dentro del contenedor, así que los cambios en el código se ven sin volver a construir la
+imagen.
+
+Para correr las pruebas dentro de los contenedores, con cada versión de Python:
+
+```powershell
+docker compose run --rm py311 pytest -q
+docker compose run --rm py312 pytest -q
+docker compose run --rm py313 pytest -q
 ```
+
+Para que el asistente de IA funcione dentro del contenedor, la clave se define en la misma terminal antes
+de arrancarlo (Compose se la pasa al contenedor):
+
+```powershell
+$env:IA_API_KEY = "gsk_..."
+docker compose up py312
+```
+
+Si sale el error *port is already allocated*, es porque otro programa ya usa el puerto 8550 (por ejemplo
+la aplicación abierta fuera de Docker); hay que cerrarlo y volver a intentar.
 
 ### Para usar el asistente de IA
 
@@ -255,6 +300,108 @@ validador**: 40 % sacadas al azar del lenguaje, 40 % que son esas mismas cadenas
 
 ---
 
+## Práctica 5: visualización de autómatas
+
+En esta práctica se amplió el dibujo y la simulación gráfica del programa. Todo el dibujo está hecho
+directamente sobre el lienzo de Flet (`flet.canvas`), sin bibliotecas de diagramas.
+
+### Dibujo del autómata
+
+Se dibuja cualquier autómata de la sesión, sea AFD, AFND o AFND-λ, ya sea creado en el Editor o
+importado desde `.jff`, `.json` o `.xml`.
+
+- **Estados:** círculos con su nombre. El inicial tiene una flecha de entrada y los de aceptación,
+  doble círculo.
+- **Transiciones:** flechas con sus símbolos. Si varias van al mismo destino, se juntan en una sola
+  etiqueta (`a, b`, o un rango como `a-c`). Las λ van con línea punteada de otro color.
+- **Ciclos sobre un mismo estado:** se dibujan como un lazo encima del estado.
+- **Transiciones en los dos sentidos** entre dos estados: se dibujan como dos arcos curvados hacia lados
+  distintos, para que no se encimen las flechas ni las etiquetas.
+
+Las curvas son de Bézier y la punta de flecha se calcula con la dirección de la curva en el borde del
+círculo (`src/ui/geometria.py`). El dibujo en sí está en `src/ui/componentes/lienzo.py`.
+
+**Posición inicial de los estados.** Se calcula con un procedimiento propio por capas
+(`src/core/disposicion.py`):
+
+1. Se hace un recorrido en anchura desde el estado inicial.
+2. La capa de cada estado es su distancia al inicial (cuántas transiciones hay que seguir). Cada capa
+   es una columna, de modo que el diagrama se lee de izquierda a derecha.
+3. Dentro de cada columna, los estados se reparten de arriba abajo y se centran verticalmente.
+4. Los estados a los que no se llega desde el inicial van en una última columna.
+
+Si el autómata ya trae posiciones (por ejemplo, un `.jff` de JFLAP) se respetan. Si sólo faltan las de
+algunos estados, éstos se agregan en filas debajo del dibujo para no caer encima de otro.
+
+**Reubicar estados.** Cualquier estado se puede arrastrar con el ratón. Arrastrar el fondo mueve la
+vista y la rueda del ratón acerca o aleja. En el Editor están además los botones *Ajustar a la vista* y
+*Ordenar automáticamente*.
+
+**Resultados de las Prácticas 3 y 4.** En cada conversión se ven lado a lado el autómata original y el
+obtenido:
+
+| Pantalla | Izquierda | Derecha |
+|---|---|---|
+| Conversiones → Eliminar λ | Autómata original | AFN sin λ |
+| Conversiones → Subconjuntos | Autómata original | AFD por subconjuntos |
+| Conversiones → Cadena completa | Autómata original | AFD mínimo |
+| Minimización → Minimizar AFD | AFD de entrada | AFD mínimo |
+| Expresiones regulares → ER → Autómata | AFN-λ de Thompson | AFD mínimo |
+
+Además, cada algoritmo se puede recorrer paso a paso y el diagrama resalta en cada paso los estados y
+las transiciones que intervienen.
+
+### Simulación gráfica
+
+En **Simulación**:
+
+1. Se elige el autómata y se escribe la cadena (`λ` o vacío para la cadena vacía).
+2. **Validar** calcula la simulación completa.
+3. Con los botones ⏮ ◀ ▶ ⏭ se avanza o se retrocede símbolo por símbolo; el botón del centro la
+   reproduce sola.
+
+En cada paso:
+
+- El diagrama resalta el **estado actual** y la **transición usada**. En un AFND o AFND-λ se resalta
+  el **conjunto de estados activos** y todas las transiciones que se tomaron, incluidas las λ de la
+  clausura.
+- La **cinta** muestra los símbolos ya leídos, el que se acaba de leer y los que faltan, y debajo dice
+  *Leído* y *Por leer*.
+- Al terminar, el diagrama se pinta de verde o de rojo y aparece **CADENA ACEPTADA** o **CADENA
+  RECHAZADA**, con la explicación.
+
+### Cálculo separado del dibujo
+
+El lienzo no calcula nada, sólo pinta lo que le dan dos módulos que no dependen de Flet:
+
+- `src/core/disposicion.py`: dónde va cada estado.
+- `src/core/animacion.py`: qué se resalta en cada paso. A partir del recorrido del simulador
+  (`src/core/simulacion.py`) arma un *cuadro* por posición de la cinta, con los estados activos, las
+  transiciones usadas, la parte leída, la parte pendiente y, en el último cuadro, si la cadena se acepta.
+
+### Pruebas automatizadas
+
+Están en `tests/test_visualizacion.py` y corren en la integración continua con Python 3.11, 3.12 y 3.13:
+
+- **Posición única de cada estado.** Para los ejemplos, todos los archivos de `automatas/`, los
+  resultados de cada conversión de la Práctica 3, las etapas de Thompson de varias expresiones y
+  autómatas aleatorios, se comprueba que ningún par de estados comparte posición ni queda a menos de
+  un diámetro de distancia. También se prueba completar posiciones sin mover las que ya existían.
+- **Lo que se resalta coincide con el recorrido.** En más de 1000 casos (autómatas de ejemplo y
+  aleatorios, con todas las cadenas cortas), la secuencia de estados resaltados es igual a la que
+  calcula un simulador de referencia escrito aparte en la prueba. Además, cada transición resaltada
+  existe en δ y sale de un estado que estaba activo; en un AFD se resalta un solo estado y una sola
+  transición por paso.
+- **El resultado final coincide con el de las prácticas anteriores.** El veredicto del último cuadro es
+  igual al de la simulación de la Práctica 2, es el mismo en el autómata original y en cada conversión
+  de la Práctica 3, y coincide con la expresión regular de la que salió el autómata (Práctica 4).
+
+```powershell
+pytest -q tests/test_visualizacion.py
+```
+
+---
+
 ## Asistente de IA y sección de práctica
 
 ### Asistente
@@ -356,16 +503,16 @@ Dos cosas que pasaron y vale la pena anotar:
 También hay integración continua con GitHub Actions (`.github/workflows/pruebas.yml`), que corre las
 pruebas con las tres versiones en cada push y Pull Request.
 
-Cada práctica se trabajó en su propia rama (`practica1` a `practica4`) y entró a `main` por Pull
-Request. Las Prácticas 3 y 4 tienen las etiquetas `practica3` y `practica4`. Como las ramas se llaman
-igual que las etiquetas, para subir una etiqueta hay que usar el nombre completo:
-`git push origin refs/tags/practica4`.
+Cada práctica se trabajó en su propia rama (`practica1` a `practica5`) y entró a `main` por Pull
+Request. Las Prácticas 3, 4 y 5 se marcan con las etiquetas `practica3`, `practica4` y `practica5`. Como
+las ramas se llaman igual que las etiquetas, para subir una etiqueta hay que usar el nombre completo:
+`git push origin refs/tags/practica5`.
 
 ---
 
 ## Pruebas
 
-Se usan pruebas con pytest (más de 500). Algunas de las más importantes:
+Se usan pruebas con pytest (cerca de 700). Algunas de las más importantes:
 
 - Cadenas y lenguajes: cadena vacía, alfabeto de un símbolo, Σ* contra Σ⁺ en longitud 0 y el límite de
   200 000 cadenas.
@@ -376,6 +523,8 @@ Se usan pruebas con pytest (más de 500). Algunas de las más importantes:
   con la prueba de equivalencia exacta.
 - Expresiones: cada expresión obtenida se revisa con derivadas de Brzozowski y con `re.fullmatch`.
 - Práctica: cada respuesta de referencia se compara con una definición independiente del lenguaje.
+- Visualización: posiciones únicas de los estados y animación igual al recorrido del simulador
+  (ver la Práctica 5).
 - IA: se prueba con un cliente simulado, sin conectarse a internet.
 
 ```bash
@@ -389,7 +538,8 @@ pytest -q
 ```
 src/
   app.py            arranque de la aplicación
-  core/             cadenas, lenguajes, autómata, simulación, expresiones regulares, ejemplos
+  core/             cadenas, lenguajes, autómata, simulación, expresiones regulares, ejemplos,
+                    disposición de los estados y cuadros de la animación
   formatos/         .jff, .json y .xml
   algoritmos/       λ-clausura, quitar λ, subconjuntos, minimización, equivalencia,
                     eliminación de estados, Thompson y validadores
